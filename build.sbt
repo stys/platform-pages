@@ -1,4 +1,6 @@
-name := "pages-plugin"
+name := "platform-pages"
+
+organization := "com.stys"
 
 version := "1.0-SNAPSHOT"
 

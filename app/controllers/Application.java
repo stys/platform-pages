@@ -1,15 +1,19 @@
 package controllers;
 
-import com.stys.platform.pages.Pages;
-import pages.SimplePagesPlugin;
-import play.*;
-import play.libs.F;
-import play.mvc.*;
+import com.stys.platform.pages.impl.SimplePages;
+import com.stys.platform.pages.impl.SimplePagesPlugin;
 
-import views.html.*;
+import play.Logger;
+import play.Play;
+import play.libs.F;
+import play.mvc.Content;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 public class Application extends Controller {
 
+	public static F.None<Long> None = new F.None<>();
+	
     public static Result index() {
         return ok("Welcome");
     }
@@ -19,8 +23,8 @@ public class Application extends Controller {
         Logger.debug(namespace);
         Logger.debug(key);
 
-        Pages pages = Play.application().plugin(SimplePagesPlugin.class).getPagesService();
-        F.Option<Content> page = pages.get(namespace, key, 0L);
+        SimplePages pages = Play.application().plugin(SimplePagesPlugin.class).getPagesService();
+        F.Option<Content> page = pages.get(namespace, key, None);
 
         if (page.isEmpty()) return notFound("Not found");
         else return ok(page.get());

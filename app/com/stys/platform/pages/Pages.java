@@ -2,41 +2,52 @@ package com.stys.platform.pages;
 
 import play.libs.F;
 import play.mvc.Content;
-import play.mvc.Result;
 
 /**
- *
+ * Pages service. Implementors may consider to use Decorator pattern
+ * to add aspects, such as access restrictions. 
  */
-public abstract class Pages {
+public abstract class Pages<T> {
 
-    private Template<String> template;
-    private Repository<String> repository;
+	/*
+	 * Injected template service
+	 */
+    private Template<T> template;
+    
+    /*
+     * Injected repository service
+     */
+    private Repository<T> repository;
 
     /**
-     * Default constructor
+     * Constructor injection of services
      * @param template - template service
      * @param repository - repository service
      */
-    public Pages(Template<String> template, Repository<String> repository) {
+    public Pages(Template<T> template, Repository<T> repository) {
         this.template = template;
         this.repository = repository;
     }
 
-    /**
-     * Service implementation
-     */
-    public F.Option<Content> get(String namespace, String key, Long version) {
+	/**
+	 * Get page by namespace, key and optional version
+	 * @param namespace - namespace of requested page
+	 * @param key - key of requested page
+	 * @param revision - optional revision id of requested page
+	 * @return - page rendered with template service
+	 */
+    public F.Option<Content> get(String namespace, String key, F.Option<Long> revision) {
 
         // Get page content
-        String content = repository.getOr(namespace, key, version, null);
+        F.Option<T> content = repository.get(namespace, key, revision);
 
         // Check for missing
-        if (null == content) {
+        if (content.isEmpty()) {
             return F.Option.None();
         }
 
         // Return rendered content
-        return F.Option.Some(template.render(content));
+        return F.Option.Some(template.render(content.get()));
     }
 
 }
