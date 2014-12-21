@@ -5,9 +5,9 @@ import com.stys.platform.pages.Repository;
 import com.stys.platform.pages.Template;
 
 
-public class SimplePages extends Pages<SimplePage> {
+public class PagesService extends Pages<Page> {
 
-	public SimplePages(Template<SimplePage> template, Repository<SimplePage> repository) {
+	public PagesService(Template<Page> template, Repository<Page> repository) {
 		super(template, repository);
 	}
 	

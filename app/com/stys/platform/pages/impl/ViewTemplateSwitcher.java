@@ -9,20 +9,20 @@ import com.stys.platform.pages.Template;
 /**
  * A facade for multiple templates
  */
-public class TemplateSwitcher implements Template<SimplePage> {
+public class ViewTemplateSwitcher implements Template<Page> {
 
 	// Registry of templates
-	private Map<String, Template<String>> templates;
+	private Map<String, Template<Page>> templates;
 	
-	public TemplateSwitcher(Map<String, Template<String>> templates) {
+	public ViewTemplateSwitcher(Map<String, Template<Page>> templates) {
 		this.templates = templates;
 	}
 	
 	@Override
-	public Content render(final SimplePage page) {
+	public Content render(final Page page) {
 	
 		// Get a template
-		Template<String> template = templates.get(page.template);
+		Template<Page> template = templates.get(page.template);
 		
 		// Check template
 		if (null == template) {
@@ -44,7 +44,7 @@ public class TemplateSwitcher implements Template<SimplePage> {
 		}
 		
 		// Render required template
-		return template.render(page.content);
+		return template.render(page);
 		
 	}
 

@@ -13,7 +13,7 @@ import com.avaje.ebean.annotation.UpdatedTimestamp;
  * Simple implementation of database page storage.
  */
 @Entity
-public class SimplePageEntity extends Model {
+public class PageEntity extends Model {
 
     /**
 	 * Default serial version ID
@@ -46,6 +46,8 @@ public class SimplePageEntity extends Model {
 
     public String key;
     
+    public String title;
+    
     @Lob
     public String content;
     
@@ -57,13 +59,14 @@ public class SimplePageEntity extends Model {
     @UpdatedTimestamp
     public Timestamp updateDateTime;
 
-    public static final Finder<Long, SimplePageEntity> find =
-            new Finder<Long, SimplePageEntity>(Long.class, SimplePageEntity.class);
+    public static final Finder<Long, PageEntity> find =
+            new Finder<Long, PageEntity>(Long.class, PageEntity.class);
     
-    public static SimplePageEntity create(String namespace, String key, String content, String template) {
-    	SimplePageEntity page = new SimplePageEntity();
+    public static PageEntity create(String namespace, String key, String title, String content, String template) {
+    	PageEntity page = new PageEntity();
     	page.namespace = namespace;
     	page.key = key;
+    	page.title = title;
     	page.content = content;
     	page.template = template;
     	page.save();

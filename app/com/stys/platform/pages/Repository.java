@@ -12,20 +12,20 @@ public interface Repository<T> {
 
 	/**
 	 * Store page in repository
+	 * @param page - contents of page
 	 * @param namespace - namespace of page
 	 * @param key - name of page
-	 * @param version - version of page
-	 * @param page - contents of page
+	 * @param revision - version of page
 	 */
-    public void put(String namespace, String key, F.Option<Long> version, T page);
+    public void put(T page, String namespace, String key, F.Option<Long> revision);
 
     /**
      * Get page from repository
      * @param namespace - namespace of page
      * @param key - name of page
-     * @param version - version of page
+     * @param revision - version of page
      * @return
      */
-    public F.Option<T> get(String namespace, String key, F.Option<Long> version);
+    public F.Option<T> get(String namespace, String key, F.Option<Long> revision);
 
 }

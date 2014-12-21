@@ -1,19 +1,14 @@
-@(content: String)
+@(page: com.stys.platform.pages.impl.Page)
 
-<html>
+@main(page.title) {
 
-    <head>
+	<p>Template: new</p>
+			
+    <article>
+        @Html(page.content)
+    </article>
+	
+	<a class="btn btn-default" href="@routes.Application.editor(page.namespace, page.key)">Редактировать</a>
 
-    </head>
 
-    <body>
-
-        <p>Template: new</p>
-
-        <article>
-            @Html(content)
-        </article>
-
-    </body>
-
-</html>
+}

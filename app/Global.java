@@ -1,4 +1,4 @@
-import com.stys.platform.pages.impl.SimplePageEntity;
+import com.stys.platform.pages.impl.PageEntity;
 
 import models.Dummy;
 import play.Application;
@@ -12,10 +12,10 @@ public class Global extends GlobalSettings {
     @Override
     public void onStart(Application application) {
 
-        if (0 == SimplePageEntity.find.findRowCount()) {
+        if (0 == PageEntity.find.findRowCount()) {
         	
-        	SimplePageEntity.create("test", "drive", "<h1>Test</h1><p>drive</p>", "new");
-            SimplePageEntity.create("test", "your/strength", "<h1>Test</h1><p>your strength</p>", "old");
+        	PageEntity.create("test", "drive", "Test drive", "<h1>Test</h1><p>drive</p>", "new");
+            PageEntity.create("test", "your/strength", "Test your strength", "<h1>Test</h1><p>your strength</p>", "old");
 
         }
         

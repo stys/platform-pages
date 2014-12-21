@@ -30,7 +30,7 @@ public abstract class Pages<T> {
     }
 
 	/**
-	 * Get page by namespace, key and optional version
+	 * Get page by namespace, key and optional revision
 	 * @param namespace - namespace of requested page
 	 * @param key - key of requested page
 	 * @param revision - optional revision id of requested page
@@ -48,6 +48,21 @@ public abstract class Pages<T> {
 
         // Return rendered content
         return F.Option.Some(template.render(content.get()));
+    }
+    
+    /**
+     * Put page by namespace, key and optional revision
+     * @param page
+     * @param namespace
+     * @param key
+     * @param revision
+     * @return
+     */
+    public void put(T page, String namespace, String key, F.Option<Long> revision) {
+    
+    	// Put into repository
+    	repository.put(page, namespace, key, revision);
+    	
     }
 
 }
