@@ -14,8 +14,8 @@ public class Global extends GlobalSettings {
 
         if (0 == PageEntity.find.findRowCount()) {
         	
-        	PageEntity.create("test", "drive", "Test drive", "<h1>Test</h1><p>drive</p>", "new");
-            PageEntity.create("test", "your/strength", "Test your strength", "<h1>Test</h1><p>your strength</p>", "old");
+        	PageEntity.create("test", "drive", "Test drive", "== Test drive Yeah!", "new");
+            PageEntity.create("test", "your/strength", "Test your strength", "**Test** your strenght ", "old");
 
         }
         

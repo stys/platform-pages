@@ -4,11 +4,18 @@
 
 	<p>Template: new</p>
 			
-    <article>
-        @Html(page.content)
+    <article id="content">
+        @page.content
     </article>
 	
 	<a class="btn btn-default" href="@routes.Application.editor(page.namespace, page.key)">Редактировать</a>
 
+	<script>
 
-}
+			var converter = getSanitizingConverter();
+			var container = $("article");
+			container.html(converter.makeHtml(container.text()));
+
+	</script>
+
+} 
