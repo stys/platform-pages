@@ -37,7 +37,7 @@ public class ViewTemplateSwitcher implements Template<Page> {
 
 				@Override
 				public String contentType() {
-					return "application/text";
+					return "text/plain";
 				}
 				
 			};

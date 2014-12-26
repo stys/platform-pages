@@ -22,7 +22,7 @@ public abstract class PagesPlugin extends com.stys.platform.pages.Plugin<Page> {
 		this.application = application;		
 	}
 	
-	public Map<String, Template<Page>> templates() {
+	public Map<String, Template<Page>> loadTemplates() {
 		
 		// Allocate 
 		Map<String, Template<Page>> templates = new HashMap<>();

@@ -1,6 +1,8 @@
 package com.stys.platform.pages.impl;
 
+import java.lang.reflect.Constructor;
 import java.util.Map;
+import java.util.Set;
 
 import play.Application;
 import play.Logger;
@@ -24,25 +26,34 @@ public class EditPagesPlugin extends PagesPlugin {
         Logger.debug("Using %s", this.getClass().getSimpleName());
         
         // Load view templates
-        Map<String, Template<Page>> templates = this.templates();
+        Map<String, Template<Page>> templates = this.loadTemplates();
         
         // Load editor template
         String name = application.configuration().getString(EDITOR_TEMPLATES_KEY);
         
-        Template<PageEdit> editor;
+        Template<Page> editor;
+
 		try {
-			@SuppressWarnings("unchecked")
-			Template<PageEdit> _editor = (Template<PageEdit>) application.classloader().loadClass(name).newInstance();
-			editor = _editor;
+
+			// Load class
+			Class clazz = application.classloader().loadClass(name);
+
+			// Get constructor
+			Constructor constructor = clazz.getConstructor(new Class[]{ Set.class });
+
+			// Create instance
+			editor = (Template<Page>) constructor.newInstance(templates.keySet());
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		} 
         
         // Create editor 
-        EditorTemplate wrapper = new EditorTemplate(editor, templates);
+        EditorTemplate wrapper = new EditorTemplate(editor);
         
         // Implementation of repository service
-        Repository<Page> repository = new PagesRepository();
+        Repository<Page> wrapped = new PagesRepository();
+		Repository<Page> repository = new ConvertingPagesRepository(wrapped);
 
         // Create and store an instance of pages service
         this.pages = new PagesService(wrapper, repository);

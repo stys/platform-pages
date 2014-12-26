@@ -1,4 +1,4 @@
-package com.stys.platform.pages.impl;
+package com.stys.platform.pages.impl.models;
 
 import java.sql.Timestamp;
 
@@ -13,7 +13,7 @@ import com.avaje.ebean.annotation.UpdatedTimestamp;
  * Simple implementation of database page storage.
  */
 @Entity
-public class PageEntity extends Model {
+public class Revision extends Model {
 
     /**
 	 * Default serial version ID
@@ -31,8 +31,8 @@ public class PageEntity extends Model {
 	 * in which another user may create a new record and increment a version of the same 
 	 * item. This would result in a version collision and a violation of a unique constraint.
 	 * 
-	 * Thus a resonable way is to create a global autoincremented revision counter and make 
-	 * it the primary key of the table. The composite unique constraint becomes unneccesary, because
+	 * Thus a reasonable way is to create a global autoincrementing revision counter and make
+	 * it the primary key of the table. The composite unique constraint becomes unnecessary, because
 	 * the primary key itself is unique.  
 	 */
 	
@@ -42,16 +42,16 @@ public class PageEntity extends Model {
 	@Id
     public Long revision;
 
-    public String namespace;
+    @ManyToOne
+    public Page page;
 
-    public String key;
-    
     public String title;
-    
+
+    @Lob
+    public String source;
+
     @Lob
     public String content;
-    
-    public String template;
 
     @CreatedTimestamp
     public Timestamp createDateTime;
@@ -59,19 +59,17 @@ public class PageEntity extends Model {
     @UpdatedTimestamp
     public Timestamp updateDateTime;
 
-    public static final Finder<Long, PageEntity> find =
-            new Finder<Long, PageEntity>(Long.class, PageEntity.class);
+    public static final Finder<Long, Revision> find =
+            new Finder<Long, Revision>(Long.class, Revision.class);
     
-    public static PageEntity create(String namespace, String key, String title, String content, String template) {
-    	PageEntity page = new PageEntity();
-    	page.namespace = namespace;
-    	page.key = key;
-    	page.title = title;
-    	page.content = content;
-    	page.template = template;
-    	page.save();
-    	return page;
+    public static Revision create(Page page, String title, String source, String content) {
+    	Revision revision = new Revision();
+    	revision.page = page;
+        revision.title = title;
+        revision.source = source;
+    	revision.content = content;
+    	revision.save();
+    	return revision;
     }
-    
 
 }

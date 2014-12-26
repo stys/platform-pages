@@ -48,26 +48,47 @@ public class Application extends Controller {
     	return redirect(routes.Application.editor(namespace, key));
     	
     }
-    
+
+    /**
+     * Show editor page
+     * @param namespace
+     * @param key
+     * @return
+     */
     public static Result editor(String namespace, String key) {
-    	
+
+        // Get pages service
     	PagesService pages = Play.application().plugin(EditPagesPlugin.class).getPagesService();
-    	F.Option<Content> page = pages.get(namespace, key, None);
-    	    	
+
+        // Get a requested page
+        F.Option<Content> page = pages.get(namespace, key, None);
+
+        // Check that page exists
     	if (page.isEmpty()) return notFound("Not found");
+
+        // Return a rendered page
         else return ok(page.get());
-    	
     }
-    
+
+    /**
+     * Save form data
+     * @return
+     */
     public static Result edit() {
-    
+
+        // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
-    	PagesService pages = Play.application().plugin(EditPagesPlugin.class).getPagesService();
-    	Page page = filled.get();    	
+        Page page = filled.get();
+
+        // Retrieve pages service
+        PagesService pages = Play.application().plugin(EditPagesPlugin.class).getPagesService();
+
+  	    // Store as new revision
     	pages.put(page, page.namespace, page.key, None);
-    	
+
+        // Redirect to public
     	return redirect(routes.Application.pages(page.namespace, page.key));
-    
+
     }
 
 }

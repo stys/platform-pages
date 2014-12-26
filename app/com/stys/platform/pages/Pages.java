@@ -39,15 +39,16 @@ public abstract class Pages<T> {
     public F.Option<Content> get(String namespace, String key, F.Option<Long> revision) {
 
         // Get page content
-        F.Option<T> content = repository.get(namespace, key, revision);
+        F.Option<T> page = repository.get(namespace, key, revision);
 
         // Check for missing
-        if (content.isEmpty()) {
+        if (page.isEmpty()) {
             return F.Option.None();
         }
 
         // Return rendered content
-        return F.Option.Some(template.render(content.get()));
+        return F.Option.Some(template.render(page.get()));
+
     }
     
     /**
@@ -59,10 +60,10 @@ public abstract class Pages<T> {
      * @return
      */
     public void put(T page, String namespace, String key, F.Option<Long> revision) {
-    
+
     	// Put into repository
     	repository.put(page, namespace, key, revision);
-    	
+
     }
 
 }

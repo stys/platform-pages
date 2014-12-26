@@ -35,7 +35,7 @@ public class ViewPagesPlugin extends PagesPlugin {
         Logger.debug("Using %s", this.getClass().getSimpleName());
                 
         // Create template switcher
-        ViewTemplateSwitcher switcher = new ViewTemplateSwitcher(templates());
+        ViewTemplateSwitcher switcher = new ViewTemplateSwitcher(loadTemplates());
         
         // Implementation of repository service
         Repository<Page> repository = new PagesRepository();

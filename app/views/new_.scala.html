@@ -3,19 +3,15 @@
 @main(page.title) {
 
 	<p>Template: new</p>
-			
+
+    <p>Revision: @page.revision </p>
+
+    <p>Revision: @page.status </p>
+
     <article id="content">
         @page.content
     </article>
 	
 	<a class="btn btn-default" href="@routes.Application.editor(page.namespace, page.key)">Редактировать</a>
-
-	<script>
-
-			var converter = getSanitizingConverter();
-			var container = $("article");
-			container.html(converter.makeHtml(container.text()));
-
-	</script>
 
 } 

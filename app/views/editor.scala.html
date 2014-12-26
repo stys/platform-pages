@@ -1,10 +1,8 @@
-@(page: com.stys.platform.pages.impl.PageEdit)
+@(page: com.stys.platform.pages.impl.Page, templates: java.util.Set[String])
 
 @import play.Logger
 
 @main("Редактирование страницы") {
-
-	@Logger.info("XXX: " + page.title)
 
 	<form class="form-horizontal" role="form" method="POST" action="@routes.Application.edit">
 		<div class="form-group">
@@ -26,16 +24,16 @@
     		</div>
   		</div>
   		<div class="form-group">
-    		<label for="content" class="col-sm-2 control-label">Contents</label>
+    		<label for="source" class="col-sm-2 control-label">Contents</label>
     		<div class="col-sm-10">
-      			<textarea class="form-control" id="content" name="content">@page.content</textarea>
+      			<textarea class="form-control" id="source" name="source">@page.content</textarea>
     		</div>
   		</div>
   		<div class="form-group">
   			<label for="template" class="col-sm-2 control-label">Template</label>
   			<div class="col-sm-10">
   				<select value="@page.template" class="form-control" id="template" name="template" >
-				@for( t <- page.templates ) {
+				@for( t <- templates ) {
 					<option>@t</option>
   				}
 				</select>
