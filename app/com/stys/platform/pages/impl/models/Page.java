@@ -1,13 +1,16 @@
 package com.stys.platform.pages.impl.models;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.TxRunnable;
-import play.db.ebean.Model;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.List;
+
+import play.Logger;
+import play.db.ebean.Model;
+
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.TxRunnable;
 
 /**
  *
@@ -36,20 +39,22 @@ public class Page extends Model {
         final Page entity = new Page();
         final Revision revision = new Revision();
 
+        entity.namespace = page.namespace;
+        entity.key = page.key;
+        entity.status = page.status;
+        entity.template = page.template;
+
+        revision.page = entity;
+        revision.title = page.title;
+        revision.source = page.source;
+        revision.content = page.content;
+        
+        Logger.info("Hey!");
+        
         // Execute in transaction
         Ebean.execute(new TxRunnable() {
             @Override
             public void run() {
-                entity.namespace = page.namespace;
-                entity.key = page.key;
-                entity.status = page.status;
-                entity.template = page.template;
-
-                revision.page = entity;
-                revision.title = page.title;
-                revision.source = page.source;
-                revision.content = page.content;
-
                 entity.save();
                 revision.save();
             }

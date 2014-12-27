@@ -8,10 +8,10 @@ import play.mvc.Content;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import com.stys.platform.pages.impl.EditPagesPlugin;
+import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.Page;
-import com.stys.platform.pages.impl.PagesPlugin;
-import com.stys.platform.pages.impl.PagesService;
+import com.stys.platform.pages.impl.edit.EditPlugin;
+import com.stys.platform.pages.impl.view.ViewPlugin;
 
 public class Application extends Controller {
 
@@ -26,7 +26,7 @@ public class Application extends Controller {
         Logger.debug(namespace);
         Logger.debug(key);
 
-        PagesService pages = Play.application().plugin(PagesPlugin.class).getPagesService();
+        Service<Page> pages = Play.application().plugin(ViewPlugin.class).getPagesService();
         F.Option<Content> page = pages.get(namespace, key, None);
 
         if (page.isEmpty()) return notFound("Not found");
@@ -37,8 +37,10 @@ public class Application extends Controller {
     private static final Form<Page> form = Form.form(Page.class);
      
     public static Result create(String namespace, String key) {
-        	   	
-    	PagesService pages = Play.application().plugin(EditPagesPlugin.class).getPagesService();
+        
+    	// FIXME: may already exit!
+    	
+    	Service<Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
     	Page page = new Page();
     	page.namespace = namespace;
     	page.key = key;
@@ -58,7 +60,7 @@ public class Application extends Controller {
     public static Result editor(String namespace, String key) {
 
         // Get pages service
-    	PagesService pages = Play.application().plugin(EditPagesPlugin.class).getPagesService();
+    	Service<Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
 
         // Get a requested page
         F.Option<Content> page = pages.get(namespace, key, None);
@@ -79,9 +81,11 @@ public class Application extends Controller {
         // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
         Page page = filled.get();
-
+        
+        Logger.info(page.toString());
+        
         // Retrieve pages service
-        PagesService pages = Play.application().plugin(EditPagesPlugin.class).getPagesService();
+        Service<Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
 
   	    // Store as new revision
     	pages.put(page, page.namespace, page.key, None);

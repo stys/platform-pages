@@ -2,6 +2,8 @@ package com.stys.platform.pages.impl;
 
 import com.stys.platform.pages.impl.models.Page;
 import com.stys.platform.pages.impl.models.Revision;
+
+import play.Logger;
 import play.libs.F;
 
 import com.stys.platform.pages.Repository;
@@ -9,15 +11,18 @@ import com.stys.platform.pages.Repository;
 /**
  * Implementation of pages repository over {@link com.stys.platform.pages.impl.models.Revision}.
  */
-public class PagesRepository implements Repository<com.stys.platform.pages.impl.Page> {
+public class DatabasePagesRepository implements Repository<com.stys.platform.pages.impl.Page> {
 
+	private static final F.Option<com.stys.platform.pages.impl.Page> None = 
+			new F.None<com.stys.platform.pages.impl.Page>();
+	
 	/**
 	 * Creates a new revision, when called without a specific revision. Otherwise
 	 * overwrites the contents of the specified revision. 
 	 */
 	@Override
     public void put(com.stys.platform.pages.impl.Page page, String namespace, String key, F.Option<Long> revision) {
-
+		
 		if (revision.isEmpty()) {
 
 			// Try to find page entity
@@ -31,6 +36,11 @@ public class PagesRepository implements Repository<com.stys.platform.pages.impl.
 				Page.create(namespace, key, page);
 
 			} else {
+				// update template
+				entity.status = page.status;
+				entity.template = page.template;
+				entity.save();
+				
 				// new revision of existing page
 				Revision.create(entity, page.title, page.source, page.content);
 			}
@@ -55,7 +65,7 @@ public class PagesRepository implements Repository<com.stys.platform.pages.impl.
 				.findUnique();
 
 		if (null == entity) {
-			return F.None();
+			return None;
 		}
 
 		// Find revision
@@ -75,7 +85,7 @@ public class PagesRepository implements Repository<com.stys.platform.pages.impl.
 		}
 
 		if (null == rev) {
-			return F.None();
+			return None;
 		}
 
 		// Prepare page

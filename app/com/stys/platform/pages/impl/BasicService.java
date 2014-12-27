@@ -1,4 +1,8 @@
-package com.stys.platform.pages;
+package com.stys.platform.pages.impl;
+
+import com.stys.platform.pages.Service;
+import com.stys.platform.pages.Repository;
+import com.stys.platform.pages.Template;
 
 import play.libs.F;
 import play.mvc.Content;
@@ -7,7 +11,7 @@ import play.mvc.Content;
  * Pages service. Implementors may consider to use Decorator pattern
  * to add aspects, such as access restrictions. 
  */
-public abstract class Pages<T> {
+public class BasicService<T> implements Service<T> {
 
 	/*
 	 * Injected template service
@@ -24,19 +28,16 @@ public abstract class Pages<T> {
      * @param template - template service
      * @param repository - repository service
      */
-    public Pages(Template<T> template, Repository<T> repository) {
+    public BasicService(Template<T> template, Repository<T> repository) {
         this.template = template;
         this.repository = repository;
     }
 
-	/**
-	 * Get page by namespace, key and optional revision
-	 * @param namespace - namespace of requested page
-	 * @param key - key of requested page
-	 * @param revision - optional revision id of requested page
-	 * @return - page rendered with template service
+	/* (non-Javadoc)
+	 * @see com.stys.platform.pages.PagesX#get(java.lang.String, java.lang.String, play.libs.F.Option)
 	 */
-    public F.Option<Content> get(String namespace, String key, F.Option<Long> revision) {
+    @Override
+	public F.Option<Content> get(String namespace, String key, F.Option<Long> revision) {
 
         // Get page content
         F.Option<T> page = repository.get(namespace, key, revision);
@@ -51,15 +52,11 @@ public abstract class Pages<T> {
 
     }
     
-    /**
-     * Put page by namespace, key and optional revision
-     * @param page
-     * @param namespace
-     * @param key
-     * @param revision
-     * @return
-     */
-    public void put(T page, String namespace, String key, F.Option<Long> revision) {
+    /* (non-Javadoc)
+	 * @see com.stys.platform.pages.PagesX#put(T, java.lang.String, java.lang.String, play.libs.F.Option)
+	 */
+    @Override
+	public void put(T page, String namespace, String key, F.Option<Long> revision) {
 
     	// Put into repository
     	repository.put(page, namespace, key, revision);

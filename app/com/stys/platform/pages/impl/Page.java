@@ -21,5 +21,9 @@ public class Page {
 
 	public String content;
 
+	@Override
+	public String toString() {
+		return String.format("n: %s, k: %s, s: %s, t: %s", namespace, key, status, template);
+	}
 	
 }

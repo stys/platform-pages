@@ -1,6 +1,7 @@
 package templates;
 
 import com.stys.platform.pages.impl.Page;
+
 import play.mvc.Content;
 
 import com.stys.platform.pages.Template;
@@ -17,9 +18,8 @@ public class EditorTemplate implements Template<Page> {
 
 	@Override
 	public Content render(Page page) {
-
+		// render editor with page content
 		return views.html.editor.render(page, templates);
-
 	}
 	
 }

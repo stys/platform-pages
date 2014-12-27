@@ -1,20 +1,21 @@
-package com.stys.platform.pages.impl;
+package com.stys.platform.pages.impl.view;
 
 import java.util.Map;
 
 import play.mvc.Content;
 
 import com.stys.platform.pages.Template;
+import com.stys.platform.pages.impl.Page;
 
 /**
- * A facade for multiple templates
+ * Simple template switcher
  */
-public class ViewTemplateSwitcher implements Template<Page> {
+public class DefaultViewTemplate implements Template<Page> {
 
 	// Registry of templates
 	private Map<String, Template<Page>> templates;
 	
-	public ViewTemplateSwitcher(Map<String, Template<Page>> templates) {
+	public DefaultViewTemplate(Map<String, Template<Page>> templates) {
 		this.templates = templates;
 	}
 	
