@@ -1,63 +1,72 @@
-package controllers;
+package com.stys.platform.pages.impl;
 
 import play.Logger;
 import play.Play;
 import play.data.Form;
 import play.libs.F;
 import play.mvc.Content;
-import play.mvc.Controller;
 import play.mvc.Result;
 
 import com.stys.platform.pages.Service;
-import com.stys.platform.pages.impl.Page;
 import com.stys.platform.pages.impl.edit.EditPlugin;
 import com.stys.platform.pages.impl.view.ViewPlugin;
 
-public class Application extends Controller {
+import controllers.routes;
+
+public class Controller extends play.mvc.Controller {
 
 	public static F.None<Long> None = new F.None<>();
 	
     public static Result index() {
-        return ok("Welcome");
-    }
-
-    public static Result pages(String namespace, String key) {
-
-        Logger.debug(namespace);
-        Logger.debug(key);
-
-        Service<Page> pages = Play.application().plugin(ViewPlugin.class).getPagesService();
-        F.Option<Content> page = pages.get(namespace, key, None);
-
-        if (page.isEmpty()) return notFound("Not found");
-        else return ok(page.get());
-
-    }
-    
-    private static final Form<Page> form = Form.form(Page.class);
-     
-    public static Result create(String namespace, String key) {
-        
-    	// FIXME: may already exit!
-    	
-    	Service<Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
-    	Page page = new Page();
-    	page.namespace = namespace;
-    	page.key = key;
-    	
-    	pages.put(page, namespace, key, None);
-    	
-    	return redirect(routes.Application.editor(namespace, key));
-    	
+        return ok("Welcome to Platform Pages");
     }
 
     /**
-     * Show editor page
+     * Display a page by namespace and key
      * @param namespace
      * @param key
      * @return
      */
-    public static Result editor(String namespace, String key) {
+    public static Result pages(String namespace, String key) {
+
+    	// Get pages service from plugin
+        Service<Page> pages = Play.application().plugin(ViewPlugin.class).getPagesService();
+        
+        // Retrieve a page
+        F.Option<Content> page = pages.get(namespace, key, None);
+
+        // Check that page exists -> not found
+        if (page.isEmpty()) return notFound("Not found");
+        
+        // Ok
+        else return ok(page.get());
+    }
+    
+    /**
+     * Page edit form
+     */
+    private static final Form<Page> form = Form.form(Page.class);
+     
+    /**
+     * Create new page at a given workspace and key
+     * @param namespace
+     * @param key
+     * @return
+     */
+    public static Result create(String namespace, String key) {
+           	
+    	// Creating new pages is handled transparently by the service
+    	return redirect(com.stys.platform.pages.impl.routes.Controller.edit(namespace, key));
+    	
+    }
+
+    /**
+     * Show edit form for a page
+     * @param namespace
+     * @param key
+     * @return
+     */
+    public static Result edit(String namespace, String key) {
 
         // Get pages service
     	Service<Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
@@ -70,13 +79,14 @@ public class Application extends Controller {
 
         // Return a rendered page
         else return ok(page.get());
+    	
     }
 
     /**
      * Save form data
      * @return
      */
-    public static Result edit() {
+    public static Result save() {
 
         // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
@@ -91,7 +101,7 @@ public class Application extends Controller {
     	pages.put(page, page.namespace, page.key, None);
 
         // Redirect to public
-    	return redirect(routes.Application.pages(page.namespace, page.key));
+    	return redirect(com.stys.platform.pages.impl.routes.Controller.pages(page.namespace, page.key));
 
     }
 

@@ -3,13 +3,13 @@
 # ~~~~
 
 # Index
-GET     /                                 controllers.Application.index()
+GET     /                                 com.stys.platform.pages.impl.Controller.index()
 
 # Pages
-GET     /pages/:namespace/*key            controllers.Application.pages(namespace, key)
-GET		/pages/create    				  controllers.Application.create(namespace ?= null, key ?= null)
-GET		/pages/edit					  	  controllers.Application.editor(namespace ?= null, key ?= null)
-POST	/pages/save						  controllers.Application.edit
+GET     /pages/:namespace/*key            com.stys.platform.pages.impl.Controller.pages(namespace, key)
+GET		/pages/create    				  com.stys.platform.pages.impl.Controller.create(namespace ?= null, key ?= null)
+GET		/pages/edit					  	  com.stys.platform.pages.impl.Controller.edit(namespace ?= null, key ?= null)
+POST	/pages/save						  com.stys.platform.pages.impl.Controller.save
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

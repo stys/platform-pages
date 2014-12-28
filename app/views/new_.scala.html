@@ -9,9 +9,9 @@
     <p>Revision: @page.status </p>
 
     <article id="content">
-        @page.content
+        @Html(page.content)
     </article>
 	
-	<a class="btn btn-default" href="@routes.Application.editor(page.namespace, page.key)">Редактировать</a>
+	<a class="btn btn-default" href="@com.stys.platform.pages.impl.routes.Controller.edit(page.namespace, page.key)">Редактировать</a>
 
 } 
