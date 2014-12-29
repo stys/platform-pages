@@ -1,19 +1,18 @@
 package com.stys.platform.pages;
 
-import play.libs.F;
-import play.mvc.Content;
-
 /**
- *
+ * Generic result type
  */
-public interface Result {
+public interface Result<T> {
 
-    public Content getContent();
+    public T getContent();
 
     public Status getStatus();
 
     public enum Status {
-        Ok, NotFound, Forbidden
+        Ok, NotFound, Unauthorized, Forbidden
     }
 
+	
+	
 }

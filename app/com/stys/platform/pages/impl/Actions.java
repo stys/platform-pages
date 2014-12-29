@@ -1,12 +1,9 @@
 package com.stys.platform.pages.impl;
 
-import play.Logger;
 import play.Play;
 import play.data.Form;
 import play.libs.F;
-import play.mvc.Content;
-
-import com.stys.platform.pages.Result;
+import play.mvc.Result;
 
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.edit.EditPlugin;
@@ -26,28 +23,16 @@ public class Actions extends play.mvc.Controller {
      * @param key
      * @return
      */
-    public static play.mvc.Result show(String namespace, String key) {
+    public static Result show(String namespace, String key) {
 
     	// Get show service from plugin
-        Service<Page> pages = Play.application().plugin(ViewPlugin.class).getPagesService();
+        Service<ContentResult, Page> pages = Play.application().plugin(ViewPlugin.class).getPagesService();
         
         // Retrieve a page
-        Result result = pages.get(namespace, key, None);
+        ContentResult result = pages.get(namespace, key, None);
 
-        // Check that page exists -> not found
-        if (result.getStatus().equals(Result.Status.NotFound))
-            return notFound(result.getContent());
-
-        // If not authorized
-        if (result.getStatus().equals(Result.Status.Forbidden))
-            return forbidden(result.getContent());
-
-        // Check ok
-        if (result.getStatus().equals(Result.Status.Ok))
-            return ok(result.getContent());
-
-        // Throw
-        throw new IllegalStateException("Unexpected status from pages service");
+        // Convert to play.mvc.Result
+        return result.toPlayMvcResult();
     }
     
     /**
@@ -74,28 +59,16 @@ public class Actions extends play.mvc.Controller {
      * @param key
      * @return
      */
-    public static play.mvc.Result edit(String namespace, String key) {
+    public static Result edit(String namespace, String key) {
 
         // Get show service
-    	Service<Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
+    	Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
 
         // Get a requested page
-        Result result = pages.get(namespace, key, None);
+        ContentResult result = pages.get(namespace, key, None);
 
-        // Check that page exists -> not found
-        if (result.getStatus().equals(Result.Status.NotFound))
-            return notFound(result.getContent());
-
-        // If not authorized
-        if (result.getStatus().equals(Result.Status.Forbidden))
-            return forbidden(result.getContent());
-
-        // Check ok
-        if (result.getStatus().equals(Result.Status.Ok))
-            return ok(result.getContent());
-
-        // Throw
-        throw new IllegalStateException("Unexpected status code");
+        // Convert to play.mvc.Result
+        return result.toPlayMvcResult();
     	
     }
 
@@ -110,22 +83,13 @@ public class Actions extends play.mvc.Controller {
         Page page = filled.get();
         
         // Retrieve show service
-        Service<Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
+        Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
 
   	    // Store as new revision
-    	Result result = pages.put(page, page.namespace, page.key, None);
+    	ContentResult result = pages.put(page, page.namespace, page.key, None);
 
-        // Check for error
-        if (result.getStatus().equals(Result.Status.Forbidden))
-            return forbidden(result.getContent());
-
-        // Redirect to public
-    	if (result.getStatus().equals(Result.Status.Ok))
-            return show(page.namespace, page.key);
-
-        // Unknown status
-        throw new IllegalStateException("Unexpected status code");
-
+        // Convert tot play.mvc.Result
+    	return result.toPlayMvcResult();
     }
 
 }

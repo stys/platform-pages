@@ -1,9 +1,8 @@
 package com.stys.platform.pages;
 
 import play.libs.F;
-import play.mvc.Content;
 
-public interface Service<T> {
+public interface Service<R, T> {
 
 	/**
 	 * Get page by namespace, key and optional revision
@@ -12,7 +11,7 @@ public interface Service<T> {
 	 * @param revision - optional revision id of requested page
 	 * @return - page rendered with template service
 	 */
-	public Result get(String namespace, String key, F.Option<Long> revision);
+	public R get(String namespace, String key, F.Option<Long> revision);
 
 	/**
 	 * Put page by namespace, key and optional revision
@@ -22,6 +21,6 @@ public interface Service<T> {
 	 * @param revision
 	 * @return
 	 */
-	public Result put(T page, String namespace, String key, F.Option<Long> revision);
+	public R put(T page, String namespace, String key, F.Option<Long> revision);
 
 }

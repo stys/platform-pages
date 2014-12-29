@@ -1,12 +1,10 @@
 package com.stys.platform.pages.impl;
 
-import com.stys.platform.pages.impl.models.Page;
-import com.stys.platform.pages.impl.models.Revision;
-
-import play.Logger;
 import play.libs.F;
 
 import com.stys.platform.pages.Repository;
+import com.stys.platform.pages.impl.models.Page;
+import com.stys.platform.pages.impl.models.Revision;
 
 /**
  * Implementation of show repository over {@link com.stys.platform.pages.impl.models.Revision}.

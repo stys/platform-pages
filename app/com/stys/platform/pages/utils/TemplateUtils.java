@@ -1,4 +1,4 @@
-package com.stys.platform.pages.impl;
+package com.stys.platform.pages.utils;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -8,6 +8,7 @@ import java.util.Set;
 import play.Application;
 
 import com.stys.platform.pages.Template;
+import com.stys.platform.pages.impl.Page;
 
 public abstract class TemplateUtils  {
 
@@ -54,6 +55,7 @@ public abstract class TemplateUtils  {
 	 * @param application
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static Template<Page> loadEditorTemplate(Application application, Set<String> templates) {
 		// Load editor template
         String name = application.configuration().getString(EDITOR_TEMPLATE_KEY);

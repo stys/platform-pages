@@ -9,10 +9,9 @@ import com.stys.platform.pages.Processor;
 import com.stys.platform.pages.Repository;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.Template;
-import com.stys.platform.pages.impl.MarkdownHtmlConverter;
-import com.stys.platform.pages.impl.Page;
-import com.stys.platform.pages.impl.DatabasePagesRepository;
-import com.stys.platform.pages.impl.TemplateUtils;
+import com.stys.platform.pages.impl.*;
+import com.stys.platform.pages.utils.AccessUtils;
+import com.stys.platform.pages.utils.TemplateUtils;
 
 public class DefaultEditPlugin extends EditPlugin {
 	
@@ -24,12 +23,15 @@ public class DefaultEditPlugin extends EditPlugin {
 	/*
 	 * Instance of service
 	 */
-	private Service<Page> service;
+	private Service<ContentResult, Page> service;
 	
 	public DefaultEditPlugin(Application application) {
 		this.application = application;
 	}
 	
+	/**
+	 * Composition root
+	 */
 	public void onStart() {
 	
 		// Trace
@@ -47,13 +49,25 @@ public class DefaultEditPlugin extends EditPlugin {
 		// Implementation of processor
 		Processor<Page> converter = new MarkdownHtmlConverter();
 		
+		// Access manager
+		Service<ContentResult, Page> access = AccessUtils.getEditAccessManager(application);
+		
+		// Basic service
+		Service<ContentResult, Page> pages = new BasicService<>(editor, repository);
+		
+		// Edit service
+		Service<ContentResult, Page> edit = new BasicEditService(pages, editor, converter);
+		
+		// Access managed service
+		Service<ContentResult, Page> managed = new AccessManagedService(edit, access);
+		
         // Create and store an instance of show service
-        this.service = new DefaultEditService(editor, repository, converter);
+        this.service = managed;
 		
 	}
 	
 	@Override
-	public Service<Page> getPagesService() {
+	public Service<ContentResult, Page> getPagesService() {
 		return this.service;
 	}
 	

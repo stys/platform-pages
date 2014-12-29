@@ -9,9 +9,9 @@ import com.stys.platform.pages.Plugin;
 import com.stys.platform.pages.Repository;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.Template;
-import com.stys.platform.pages.impl.Page;
-import com.stys.platform.pages.impl.DatabasePagesRepository;
-import com.stys.platform.pages.impl.TemplateUtils;
+import com.stys.platform.pages.impl.*;
+import com.stys.platform.pages.utils.AccessUtils;
+import com.stys.platform.pages.utils.TemplateUtils;
 
 /**
  * Implementation of a simple show plugin with a predefined template and
@@ -27,7 +27,7 @@ public class DefaultViewPlugin extends ViewPlugin {
 	/*
 	 * Instance of show service
 	 */
-    private Service<Page> service;
+    private Service<ContentResult, Page> service;
 
     /**
      * Usual plugin constructor 
@@ -55,15 +55,24 @@ public class DefaultViewPlugin extends ViewPlugin {
         // Implementation of repository service
         Repository<Page> repository = new DatabasePagesRepository();
 
+        // Basic service
+        Service<ContentResult, Page> basic = new BasicService<>(switcher, repository);
+        
+        // Access manager
+        Service<ContentResult, Page> access = AccessUtils.getViewAccessManager(application);
+        
+        // Compose
+        Service<ContentResult, Page> pages = new AccessManagedService(basic, access);
+        
         // Create and store an instance of show service
-        this.service = new DefaultViewService(switcher, repository);
+        this.service = pages;
     }
 
     /**
      * @see Plugin#getPagesService()
      */
     @Override
-    public Service<Page> getPagesService() {
+    public Service<ContentResult, Page> getPagesService() {
         // Return an instance
     	return this.service;
     }
