@@ -6,7 +6,7 @@ package com.stys.platform.pages;
 public abstract class Plugin<T> extends play.Plugin {
 
 	/**
-	 * Retrieve pages service
+	 * Retrieve show service
 	 * @return
 	 */
     public abstract Service<T> getPagesService();

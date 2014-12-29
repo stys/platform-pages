@@ -12,8 +12,7 @@ public interface Service<T> {
 	 * @param revision - optional revision id of requested page
 	 * @return - page rendered with template service
 	 */
-	public F.Option<Content> get(String namespace, String key,
-			F.Option<Long> revision);
+	public Result get(String namespace, String key, F.Option<Long> revision);
 
 	/**
 	 * Put page by namespace, key and optional revision
@@ -23,7 +22,6 @@ public interface Service<T> {
 	 * @param revision
 	 * @return
 	 */
-	public void put(T page, String namespace, String key,
-			F.Option<Long> revision);
+	public Result put(T page, String namespace, String key, F.Option<Long> revision);
 
 }

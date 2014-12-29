@@ -24,7 +24,7 @@ public class DefaultEditService implements Service<Page> {
 		// keep reference to editor
 		this.editor = editor;
 		
-		// create a basic pages service
+		// create a basic show service
 		this.wrapped = new BasicService<>(editor, repository);
 		
 		// store converter

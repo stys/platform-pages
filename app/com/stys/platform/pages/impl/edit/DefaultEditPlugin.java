@@ -47,7 +47,7 @@ public class DefaultEditPlugin extends EditPlugin {
 		// Implementation of processor
 		Processor<Page> converter = new MarkdownHtmlConverter();
 		
-        // Create and store an instance of pages service
+        // Create and store an instance of show service
         this.service = new DefaultEditService(editor, repository, converter);
 		
 	}

@@ -9,7 +9,7 @@ import play.libs.F;
 import com.stys.platform.pages.Repository;
 
 /**
- * Implementation of pages repository over {@link com.stys.platform.pages.impl.models.Revision}.
+ * Implementation of show repository over {@link com.stys.platform.pages.impl.models.Revision}.
  */
 public class DatabasePagesRepository implements Repository<com.stys.platform.pages.impl.Page> {
 

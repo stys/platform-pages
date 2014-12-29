@@ -14,7 +14,7 @@ import com.stys.platform.pages.impl.DatabasePagesRepository;
 import com.stys.platform.pages.impl.TemplateUtils;
 
 /**
- * Implementation of a simple pages plugin with a predefined template and
+ * Implementation of a simple show plugin with a predefined template and
  * backend database storage.
  */
 public class DefaultViewPlugin extends ViewPlugin {
@@ -25,7 +25,7 @@ public class DefaultViewPlugin extends ViewPlugin {
 	private Application application;
 	
 	/*
-	 * Instance of pages service
+	 * Instance of show service
 	 */
     private Service<Page> service;
 
@@ -38,7 +38,7 @@ public class DefaultViewPlugin extends ViewPlugin {
     }
 
     /**
-     * Plugin initialization. A composition root for pages service.
+     * Plugin initialization. A composition root for show service.
      */
     @Override
     public void onStart() {
@@ -55,7 +55,7 @@ public class DefaultViewPlugin extends ViewPlugin {
         // Implementation of repository service
         Repository<Page> repository = new DatabasePagesRepository();
 
-        // Create and store an instance of pages service
+        // Create and store an instance of show service
         this.service = new DefaultViewService(switcher, repository);
     }
 
