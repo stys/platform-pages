@@ -1,4 +1,4 @@
-package com.stys.platform.pages.utils;
+package com.stys.platform.pages.impl.utils;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -12,8 +12,8 @@ import com.stys.platform.pages.impl.Page;
 
 public abstract class TemplateUtils  {
 
-	public static final String TEMPLATES_KEY = "com.stys.platform.show.templates";
-	public static final String EDITOR_TEMPLATE_KEY = "com.stys.platform.show.editor";
+	public static final String TEMPLATES_KEY = "com.stys.platform.pages.templates";
+	public static final String EDITOR_TEMPLATE_KEY = "com.stys.platform.pages.editor";
 	
 	/**
 	 * Load templates from configuration

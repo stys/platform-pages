@@ -1,5 +1,7 @@
-package com.stys.platform.pages.impl;
+package com.stys.platform.pages.impl.controllers;
 
+import com.stys.platform.pages.impl.utils.ContentResult;
+import com.stys.platform.pages.impl.Page;
 import play.Play;
 import play.data.Form;
 import play.libs.F;
@@ -23,7 +25,7 @@ public class Actions extends play.mvc.Controller {
      * @param key
      * @return
      */
-    public static Result show(String namespace, String key) {
+    public static Result view(String namespace, String key) {
 
     	// Get show service from plugin
         Service<ContentResult, Page> pages = Play.application().plugin(ViewPlugin.class).getPagesService();

@@ -2,16 +2,16 @@ package com.stys.platform.pages.impl.view;
 
 import java.util.Map;
 
+import com.stys.platform.pages.*;
+import com.stys.platform.pages.impl.utils.ContentResult;
+import com.stys.platform.pages.impl.utils.ContentResultService;
 import play.Application;
 import play.Logger;
 
-import com.stys.platform.pages.Plugin;
-import com.stys.platform.pages.Repository;
-import com.stys.platform.pages.Service;
-import com.stys.platform.pages.Template;
 import com.stys.platform.pages.impl.*;
-import com.stys.platform.pages.utils.AccessUtils;
-import com.stys.platform.pages.utils.TemplateUtils;
+import com.stys.platform.pages.impl.utils.AccessUtils;
+import com.stys.platform.pages.impl.utils.TemplateUtils;
+import play.mvc.Content;
 
 /**
  * Implementation of a simple show plugin with a predefined template and
@@ -44,28 +44,32 @@ public class DefaultViewPlugin extends ViewPlugin {
     public void onStart() {
 
     	// Trace
-        Logger.debug("Using %s", this.getClass().getSimpleName());
+        Logger.debug(String.format("picked %s", this.getClass().getSimpleName()));
         
         // Load templates
         Map<String, Template<Page>> templates = TemplateUtils.loadTemplates(application);
         
         // Create template switcher
-        Template<Page> switcher = new DefaultViewTemplate(templates);
+        Template<Page> switcher = new TemplateSwitcher(templates);
         
         // Implementation of repository service
         Repository<Page> repository = new DatabasePagesRepository();
 
         // Basic service
-        Service<ContentResult, Page> basic = new BasicService<>(switcher, repository);
+        Service<Result<Content>, Page> basic = new BasicService<>(switcher, repository);
         
         // Access manager
-        Service<ContentResult, Page> access = AccessUtils.getViewAccessManager(application);
+        Service<Result<Content>, Page> access = AccessUtils.getViewAccessManager(application);
         
         // Compose
-        Service<ContentResult, Page> pages = new AccessManagedService(basic, access);
+        Service<Result<Content>, Page> managed = new AccessManagedService(basic, access);
         
+        // Convert to ContentResult
+        Service<ContentResult, Page> wrapped = new ContentResultService(managed);
+
         // Create and store an instance of show service
-        this.service = pages;
+        this.service = wrapped;
+
     }
 
     /**

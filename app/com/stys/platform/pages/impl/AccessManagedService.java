@@ -5,22 +5,27 @@ import play.libs.F.Option;
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Service;
 
-public class AccessManagedService implements Service<ContentResult, Page> {
+/**
+ * Generic access manager service
+ * @param <R> - type of service result
+ * @param <T> - type of page data transfer object
+ */
+public class AccessManagedService<R, T> implements Service<Result<R>, T> {
 
-	private Service<ContentResult, Page> wrapped;
+	private Service<Result<R>, T> wrapped;
 	
-	private Service<ContentResult, Page> access;
+	private Service<Result<R>, T> access;
 	
-	public AccessManagedService(Service<ContentResult, Page> service, Service<ContentResult, Page> access) {
+	public AccessManagedService(Service<Result<R>, T> service, Service<Result<R>, T> access) {
 		this.wrapped = service;
 		this.access = access;
 	}
 
 	@Override
-	public ContentResult get(String namespace, String key, Option<Long> revision) {
+	public Result<R> get(String namespace, String key, Option<Long> revision) {
 		
 		// Check permissions
-		ContentResult result = access.get(namespace, key, revision);
+		Result<R> result = access.get(namespace, key, revision);
 		
 		// If something not ok - return the result
 		if ( !result.getStatus().equals(Result.Status.Ok) ) {
@@ -33,10 +38,10 @@ public class AccessManagedService implements Service<ContentResult, Page> {
 	}
 
 	@Override
-	public ContentResult put(Page page, String namespace, String key, Option<Long> revision) {
+	public Result<R> put(T page, String namespace, String key, Option<Long> revision) {
 		
 		// Check permissions
-		ContentResult result = access.put(page, namespace, key, revision);
+		Result<R> result = access.put(page, namespace, key, revision);
 		
 		// If something not ok - return the result
 		if ( !result.getStatus().equals(Result.Status.Ok) ) {

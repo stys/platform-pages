@@ -10,12 +10,12 @@ import com.stys.platform.pages.impl.Page;
 /**
  * Simple template switcher
  */
-public class DefaultViewTemplate implements Template<Page> {
+public class TemplateSwitcher implements Template<Page> {
 
 	// Registry of templates
 	private Map<String, Template<Page>> templates;
 	
-	public DefaultViewTemplate(Map<String, Template<Page>> templates) {
+	public TemplateSwitcher(Map<String, Template<Page>> templates) {
 		this.templates = templates;
 	}
 	
@@ -24,10 +24,10 @@ public class DefaultViewTemplate implements Template<Page> {
 	
 		// Get a template
 		Template<Page> template = templates.get(page.template);
-		
+
 		// Check template
 		if (null == template) {
-			
+
 			// Result for missing template
 			return new Content() {
 
@@ -40,15 +40,13 @@ public class DefaultViewTemplate implements Template<Page> {
 				public String contentType() {
 					return "text/plain";
 				}
-				
+
 			};
 		}
-		
+
 		// Render required template
 		return template.render(page);
 		
 	}
 
-	
-	
 }

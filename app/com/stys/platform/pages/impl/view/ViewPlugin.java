@@ -1,7 +1,7 @@
 package com.stys.platform.pages.impl.view;
 
 import com.stys.platform.pages.Plugin;
-import com.stys.platform.pages.impl.ContentResult;
+import com.stys.platform.pages.impl.utils.ContentResult;
 import com.stys.platform.pages.impl.Page;
 
 /**

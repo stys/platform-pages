@@ -2,16 +2,16 @@ package com.stys.platform.pages.impl.edit;
 
 import java.util.Map;
 
+import com.stys.platform.pages.*;
+import com.stys.platform.pages.impl.utils.ContentResult;
+import com.stys.platform.pages.impl.utils.ContentResultService;
 import play.Application;
 import play.Logger;
 
-import com.stys.platform.pages.Processor;
-import com.stys.platform.pages.Repository;
-import com.stys.platform.pages.Service;
-import com.stys.platform.pages.Template;
 import com.stys.platform.pages.impl.*;
-import com.stys.platform.pages.utils.AccessUtils;
-import com.stys.platform.pages.utils.TemplateUtils;
+import com.stys.platform.pages.impl.utils.AccessUtils;
+import com.stys.platform.pages.impl.utils.TemplateUtils;
+import play.mvc.Content;
 
 public class DefaultEditPlugin extends EditPlugin {
 	
@@ -50,19 +50,22 @@ public class DefaultEditPlugin extends EditPlugin {
 		Processor<Page> converter = new MarkdownHtmlConverter();
 		
 		// Access manager
-		Service<ContentResult, Page> access = AccessUtils.getEditAccessManager(application);
+		Service<Result<Content>, Page> access = AccessUtils.getEditAccessManager(application);
 		
 		// Basic service
-		Service<ContentResult, Page> pages = new BasicService<>(editor, repository);
+		Service<Result<Content>, Page> pages = new BasicService<>(editor, repository);
 		
 		// Edit service
-		Service<ContentResult, Page> edit = new BasicEditService(pages, editor, converter);
+		Service<Result<Content>, Page> edit = new BasicEditService(pages, editor, converter);
 		
 		// Access managed service
-		Service<ContentResult, Page> managed = new AccessManagedService(edit, access);
+		Service<Result<Content>, Page> managed = new AccessManagedService(edit, access);
+
+		// Convert to ContentResult
+		Service<ContentResult, Page> wrapped = new ContentResultService(managed);
 		
         // Create and store an instance of show service
-        this.service = managed;
+        this.service = wrapped;
 		
 	}
 	

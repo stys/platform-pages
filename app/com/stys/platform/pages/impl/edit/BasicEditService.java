@@ -6,19 +6,22 @@ import com.stys.platform.pages.Processor;
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.Template;
-import com.stys.platform.pages.impl.ContentResult;
 import com.stys.platform.pages.impl.Page;
-import com.stys.platform.pages.utils.ResultUtils;
+import com.stys.platform.pages.impl.utils.ResultUtils;
+import play.mvc.Content;
 
-public class BasicEditService implements Service<ContentResult, Page> {
 
-	private Service<ContentResult, Page> wrapped;
+public class BasicEditService implements Service<Result<Content>, Page> {
+
+	private Service<Result<Content>, Page> wrapped;
 
 	private Template<Page> editor;
 	
 	private Processor<Page> processor;
+
+	private ResultUtils<Content> results = new ResultUtils<>();
 	
-	public BasicEditService(Service<ContentResult, Page> service, Template<Page> editor, Processor<Page> processor) {
+	public BasicEditService(Service<Result<Content>, Page> service, Template<Page> editor, Processor<Page> processor) {
 	
 		// create a basic show service
 		this.wrapped = service;
@@ -32,17 +35,17 @@ public class BasicEditService implements Service<ContentResult, Page> {
 	}
 	
 	@Override
-	public ContentResult get(String namespace, String key, Option<Long> revision) {
+	public Result<Content> get(String namespace, String key, Option<Long> revision) {
 	
-		// Retrieve page for editting 
-		ContentResult result = wrapped.get(namespace, key, revision);
+		// Retrieve page to edit
+		Result<Content> result = wrapped.get(namespace, key, revision);
 	
 		// If page is not found - we are creating a new one
 		if( result.getStatus().equals(Result.Status.NotFound) ) {
 			Page page = new Page();
 			page.namespace = namespace;
 			page.key = key;
-			return ResultUtils.Ok(editor.render(page));
+			return results.Ok(editor.render(page));
 		}
 		
 		// Otherwise pass unchanged
@@ -50,12 +53,12 @@ public class BasicEditService implements Service<ContentResult, Page> {
 	}
 
 	@Override
-	public ContentResult put(Page page, String namespace, String key, Option<Long> revision) {
+	public Result<Content> put(Page page, String namespace, String key, Option<Long> revision) {
 		
 		// execute processor, then put
 		page = this.processor.process(page);
 		
-		// deligate
+		// delegate
 		return wrapped.put(page, namespace, key, revision);		
 	
 	}
