@@ -18,7 +18,12 @@ import com.avaje.ebean.TxRunnable;
 @Entity
 public class Page extends Model {
 
-    @Id
+    /**
+	 * Default serial version id
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     public Long id;
 
     public String namespace;

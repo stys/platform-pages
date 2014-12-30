@@ -1,9 +1,10 @@
 package service;
 
 import com.stys.platform.pages.Result;
+import com.stys.platform.pages.Results;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.Page;
-import com.stys.platform.pages.impl.utils.ResultUtils;
+
 import play.libs.F;
 import play.mvc.Content;
 
@@ -12,7 +13,7 @@ import play.mvc.Content;
  */
 public class AllPassAccess implements Service<Result<Content>, Page> {
 
-    private ResultUtils<Content> results = new ResultUtils<>();
+    private Results<Content> results = new Results<>();
 
     @Override
     public Result<Content> get(String namespace, String key, F.Option<Long> revision) {

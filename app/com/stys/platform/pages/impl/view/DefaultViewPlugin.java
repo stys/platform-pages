@@ -53,7 +53,7 @@ public class DefaultViewPlugin extends ViewPlugin {
         Template<Page> switcher = new TemplateSwitcher(templates);
         
         // Implementation of repository service
-        Repository<Page> repository = new DatabasePagesRepository();
+        Service<Result<Page>, Page> repository = new DatabasePagesRepository();
 
         // Basic service
         Service<Result<Content>, Page> basic = new BasicService<>(switcher, repository);
@@ -62,7 +62,7 @@ public class DefaultViewPlugin extends ViewPlugin {
         Service<Result<Content>, Page> access = AccessUtils.getViewAccessManager(application);
         
         // Compose
-        Service<Result<Content>, Page> managed = new AccessManagedService(basic, access);
+        Service<Result<Content>, Page> managed = new AccessManagedService<Content, Page>(basic, access);
         
         // Convert to ContentResult
         Service<ContentResult, Page> wrapped = new ContentResultService(managed);

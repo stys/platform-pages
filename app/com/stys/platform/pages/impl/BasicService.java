@@ -1,14 +1,12 @@
 package com.stys.platform.pages.impl;
 
-import com.stys.platform.pages.Result;
-import play.Logger;
 import play.libs.F;
+import play.mvc.Content;
 
-import com.stys.platform.pages.Repository;
+import com.stys.platform.pages.Result;
+import com.stys.platform.pages.Results;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.Template;
-import com.stys.platform.pages.impl.utils.ResultUtils;
-import play.mvc.Content;
 
 /**
  * Pages service. Implementors may consider to use Decorator pattern
@@ -24,19 +22,19 @@ public class BasicService<T> implements Service<Result<Content>, T> {
     /*
      * Injected repository service
      */
-    private Repository<T> repository;
+    private Service<Result<T>, T> repository;
 
     /**
      * Result utils
      */
-    private ResultUtils<Content> results = new ResultUtils<>();
+    private Results<Content> results = new Results<>();
 
     /**
      * Constructor injection of services
      * @param template - template service
      * @param repository - repository service
      */
-    public BasicService(Template<T> template, Repository<T> repository) {
+    public BasicService(Template<T> template, Service<Result<T>, T> repository) {
         this.template = template;
         this.repository = repository;
     }
@@ -48,10 +46,10 @@ public class BasicService<T> implements Service<Result<Content>, T> {
 	public Result<Content> get(String namespace, String key, F.Option<Long> revision) {
 
         // Get page content
-        F.Option<T> page = repository.get(namespace, key, revision);
+        Result<T> result = repository.get(namespace, key, revision);
 
         // Check for missing
-        if (page.isEmpty()) {
+        if (result.getStatus().equals(Result.Status.NotFound)) {
         	return results.NotFound(new Content() {
                 @Override
                 public String body() {
@@ -66,7 +64,7 @@ public class BasicService<T> implements Service<Result<Content>, T> {
         }
 
         // Return rendered content
-        return results.Ok(template.render(page.get()));
+        return results.Ok(template.render(result.getContent()));
 
     }
     

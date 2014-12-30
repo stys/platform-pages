@@ -2,12 +2,9 @@ package com.stys.platform.pages.impl.edit;
 
 import play.libs.F.Option;
 
-import com.stys.platform.pages.Processor;
-import com.stys.platform.pages.Result;
-import com.stys.platform.pages.Service;
-import com.stys.platform.pages.Template;
+import com.stys.platform.pages.*;
 import com.stys.platform.pages.impl.Page;
-import com.stys.platform.pages.impl.utils.ResultUtils;
+
 import play.mvc.Content;
 
 
@@ -19,7 +16,7 @@ public class BasicEditService implements Service<Result<Content>, Page> {
 	
 	private Processor<Page> processor;
 
-	private ResultUtils<Content> results = new ResultUtils<>();
+	private Results<Content> results = new Results<>();
 	
 	public BasicEditService(Service<Result<Content>, Page> service, Template<Page> editor, Processor<Page> processor) {
 	

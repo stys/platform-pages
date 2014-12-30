@@ -2,36 +2,33 @@ package com.stys.platform.pages.impl;
 
 import play.libs.F;
 
-import com.stys.platform.pages.Repository;
-import com.stys.platform.pages.impl.models.Page;
-import com.stys.platform.pages.impl.models.Revision;
+import com.stys.platform.pages.Result;
+import com.stys.platform.pages.Results;
+import com.stys.platform.pages.Service;
 
 /**
- * Implementation of show repository over {@link com.stys.platform.pages.impl.models.Revision}.
+ * Implementation of repository
  */
-public class DatabasePagesRepository implements Repository<com.stys.platform.pages.impl.Page> {
+public class DatabasePagesRepository extends Results<Page> implements Service<Result<Page>, Page> {
 
-	private static final F.Option<com.stys.platform.pages.impl.Page> None = 
-			new F.None<com.stys.platform.pages.impl.Page>();
-	
 	/**
 	 * Creates a new revision, when called without a specific revision. Otherwise
 	 * overwrites the contents of the specified revision. 
 	 */
 	@Override
-    public void put(com.stys.platform.pages.impl.Page page, String namespace, String key, F.Option<Long> revision) {
+    public Result<Page> put(Page page, String namespace, String key, F.Option<Long> revision) {
 		
 		if (revision.isEmpty()) {
 
 			// Try to find page entity
-			Page entity = Page.find.where()
+			com.stys.platform.pages.impl.models.Page entity = com.stys.platform.pages.impl.models.Page.find.where()
 					.eq("namespace", namespace)
 					.eq("key", key)
 					.findUnique();
 
 			if (null == entity) {
 				// new page
-				Page.create(namespace, key, page);
+				com.stys.platform.pages.impl.models.Page.create(namespace, key, page);
 
 			} else {
 				// update template
@@ -40,8 +37,10 @@ public class DatabasePagesRepository implements Repository<com.stys.platform.pag
 				entity.save();
 				
 				// new revision of existing page
-				Revision.create(entity, page.title, page.source, page.content);
+				com.stys.platform.pages.impl.models.Revision.create(entity, page.title, page.source, page.content);
 			}
+			
+			return get(namespace, key, revision);	
 
 		}  else {
 			// Updating existing revision is a very bad idea
@@ -54,52 +53,64 @@ public class DatabasePagesRepository implements Repository<com.stys.platform.pag
 	 * Returns a contents of the page
 	 */
     @Override
-    public F.Option<com.stys.platform.pages.impl.Page> get(String namespace, String key, F.Option<Long> revision) {
+    public Result<Page> get(String namespace, String key, F.Option<Long> revision) {
 
 		// Lookup the page
-		Page entity = Page.find.where()
+		com.stys.platform.pages.impl.models.Page entity = 
+			com.stys.platform.pages.impl.models.Page.find.where()
 				.eq("namespace", namespace)
 				.eq("key", key)
 				.findUnique();
 
 		if (null == entity) {
-			return None;
+			return NotFound(null);
 		}
 
 		// Find revision
-		Revision rev = null;
+		com.stys.platform.pages.impl.models.Revision rev = null;
 
 		// If specific revision requested
 		if (revision.isDefined()) {
 
 			// Find by revision id
-			rev = Revision.find.byId(revision.get());
+			rev = com.stys.platform.pages.impl.models.Revision.find.byId(revision.get());
 
-		// Fetch latest revision
+		// Otherwise fetch latest revision
 		} else {
 
-			rev = Revision.find.where().eq("page", entity).orderBy("revision desc").setMaxRows(1).findUnique();
-
+			rev = com.stys.platform.pages.impl.models.Revision.find.where()
+					.eq("page", entity)
+					.orderBy("revision desc")
+					.setMaxRows(1)
+					.findUnique();
+			
 		}
 
 		if (null == rev) {
-			return None;
+			return NotFound(null);
 		}
 
-		// Prepare page
-		com.stys.platform.pages.impl.Page page = new com.stys.platform.pages.impl.Page();
-
-		page.namespace = entity.namespace;
+		// Convert to Page
+		return Ok(fromEntity(entity, rev));	
+    }
+    
+    private static Page fromEntity(
+    		com.stys.platform.pages.impl.models.Page entity, 
+    		com.stys.platform.pages.impl.models.Revision revision) {
+    	
+    	Page page = new Page();    	
+    	
+    	page.namespace = entity.namespace;
 		page.key = entity.key;
 		page.status = entity.status;
 		page.template = entity.template;
 
-		page.revision = rev.revision;
-		page.title = rev.title;
-		page.source = rev.source;
-		page.content = rev.content;
+		page.revision = revision.revision;
+		page.title = revision.title;
+		page.source = revision.source;
+		page.content = revision.content;
 
-		// Done
-		return F.Some(page);
+		return page;		
     }
+        
 }

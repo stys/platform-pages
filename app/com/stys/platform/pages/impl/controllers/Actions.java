@@ -1,14 +1,14 @@
 package com.stys.platform.pages.impl.controllers;
 
-import com.stys.platform.pages.impl.utils.ContentResult;
-import com.stys.platform.pages.impl.Page;
 import play.Play;
 import play.data.Form;
 import play.libs.F;
 import play.mvc.Result;
 
 import com.stys.platform.pages.Service;
+import com.stys.platform.pages.impl.Page;
 import com.stys.platform.pages.impl.edit.EditPlugin;
+import com.stys.platform.pages.impl.utils.ContentResult;
 import com.stys.platform.pages.impl.view.ViewPlugin;
 
 public class Actions extends play.mvc.Controller {
@@ -78,7 +78,7 @@ public class Actions extends play.mvc.Controller {
      * Save form data
      * @return
      */
-    public static play.mvc.Result save() {
+    public static Result save() {
 
         // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
@@ -90,8 +90,13 @@ public class Actions extends play.mvc.Controller {
   	    // Store as new revision
     	ContentResult result = pages.put(page, page.namespace, page.key, None);
 
-        // Convert tot play.mvc.Result
-    	return result.toPlayMvcResult();
+        // If status Ok -> redirect to view 
+    	if (result.getStatus().equals(com.stys.platform.pages.Result.Status.Ok)) {
+    		return view(page.namespace, page.key);
+    	// Else -> display returned content: probably containing some description of error 
+    	} else {
+    		return result.toPlayMvcResult();
+    	}
     }
 
 }

@@ -1,11 +1,10 @@
-package com.stys.platform.pages.impl.utils;
+package com.stys.platform.pages;
 
-import com.stys.platform.pages.Result;
 
 /**
  * Result helpers
  */
-public class ResultUtils<T> {
+public class Results<T> {
 
 	public Result<T> Ok(T content) {
         return new SimpleResult(content, Result.Status.Ok);
