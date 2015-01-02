@@ -14,4 +14,4 @@ lazy val pages = project.in(file("./module"))
 
 lazy val main = project.in(file("."))
 	.dependsOn(pages)
-	.aggregates(pages)
+	.aggregate(pages)
