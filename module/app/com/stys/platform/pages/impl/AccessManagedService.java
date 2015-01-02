@@ -41,7 +41,7 @@ public class AccessManagedService<R, T> implements Service<Result<R>, T> {
 	public Result<R> put(T page, String namespace, String key, Option<Long> revision) {
 		
 		// Check permissions
-		Result<R> result = access.put(page, namespace, key, revision);
+		Result<R> result = access.get(namespace, key, revision);
 		
 		// If something not ok - return the result
 		if ( !result.getStatus().equals(Result.Status.Ok) ) {
@@ -49,7 +49,7 @@ public class AccessManagedService<R, T> implements Service<Result<R>, T> {
 		}
 
 		// Now use main service
-		return wrapped.get(namespace, key, revision);
+		return wrapped.put(page, namespace, key, revision);
 		
 	}
 	

@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import play.Logger;
 import play.db.ebean.Model;
 
 import com.avaje.ebean.Ebean;
@@ -53,10 +52,8 @@ public class Page extends Model {
         revision.title = page.title;
         revision.source = page.source;
         revision.content = page.content;
-        
-        Logger.info("Hey!");
-        
-        // Execute in transaction
+                
+        // Transactional save 
         Ebean.execute(new TxRunnable() {
             @Override
             public void run() {

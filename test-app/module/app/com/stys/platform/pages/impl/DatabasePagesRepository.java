@@ -17,7 +17,7 @@ public class DatabasePagesRepository extends Results<Page> implements Service<Re
 	 */
 	@Override
     public Result<Page> put(Page page, String namespace, String key, F.Option<Long> revision) {
-		
+						
 		if (revision.isEmpty()) {
 
 			// Try to find page entity
@@ -109,7 +109,7 @@ public class DatabasePagesRepository extends Results<Page> implements Service<Re
 		page.title = revision.title;
 		page.source = revision.source;
 		page.content = revision.content;
-
+		
 		return page;		
     }
         

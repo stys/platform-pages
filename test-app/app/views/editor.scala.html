@@ -1,10 +1,6 @@
 @(page: com.stys.platform.pages.impl.Page, templates: java.util.Set[String])
 
-@import play.Logger
-
 @main("Редактирование страницы") {
-
-	@Logger.info(page.toString())
 
 	<form class="form-horizontal" role="form" method="POST" action="@com.stys.platform.pages.impl.controllers.routes.Actions.save">
 		<div class="form-group">

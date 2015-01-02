@@ -7,33 +7,45 @@ package com.stys.platform.pages;
 public class Results<T> {
 
 	public Result<T> Ok(T content) {
-        return new SimpleResult(content, Result.Status.Ok);
+        return new SimpleResult<T>(content, Result.Status.Ok);
+	}
+	
+	public Result<T> Redirect(T content) {
+		return new SimpleResult<T>(content, Result.Status.Redirect);
+	}
+	
+	public Result<T> BadRequest(T content) {
+		return new SimpleResult<T>(content, Result.Status.BadRequest);
 	}
 	
 	public Result<T> Unauthorized(T content) {
-		return new SimpleResult(content, Result.Status.Unauthorized);
+		return new SimpleResult<T>(content, Result.Status.Unauthorized);
 	}
 	
     public Result<T> Forbidden(T content) {
-        return new SimpleResult(content, Result.Status.Forbidden);
+        return new SimpleResult<T>(content, Result.Status.Forbidden);
     }
 
     public Result<T> NotFound(T content) {
-        return new SimpleResult(content, Result.Status.NotFound);
+        return new SimpleResult<T>(content, Result.Status.NotFound);
     }
+    
+    public <U> Result<U> map(Result<T> previous, U content) {
+    	return new SimpleResult<U>(content, previous.getStatus());
+    }
+    
+    private class SimpleResult<U> implements Result<U> {
 
-    private class SimpleResult implements Result<T> {
-
-        private T content;
+        private U content;
         private Result.Status status;
 
-        public SimpleResult(T content, Result.Status status) {
+        public SimpleResult(U content, Result.Status status) {
             this.content = content;
             this.status = status;
         }
 
         @Override
-        public T getContent() {
+        public U getContent() {
             return this.content;
         }
 

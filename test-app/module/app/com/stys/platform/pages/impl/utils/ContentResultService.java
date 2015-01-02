@@ -35,8 +35,8 @@ public class ContentResultService implements Service<ContentResult, Page> {
 
 	@Override
 	public ContentResult put(Page page, String namespace, String key, F.Option<Long> revision) {
-
-		final Result<Content> result = wrapped.get(namespace, key, revision);
+	
+		final Result<Content> result = wrapped.put(page, namespace, key, revision);
 
 		return new ContentResult() {
 			@Override

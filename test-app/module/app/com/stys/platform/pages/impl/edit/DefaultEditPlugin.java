@@ -38,7 +38,7 @@ public class DefaultEditPlugin extends EditPlugin {
 	public void onStart() {
 	
 		// Trace
-        Logger.debug("Using %s", this.getClass().getSimpleName());
+        Logger.debug(String.format("picked %s", this.getClass().getSimpleName()));
         
         // Load view templates
         Map<String, Template<Page>> templates = TemplateUtils.loadTemplates(application);

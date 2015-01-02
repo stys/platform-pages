@@ -62,7 +62,7 @@ public class BasicService<T> implements Service<Result<Content>, T> {
                 }
             });
         }
-
+      
         // Return rendered content
         return results.Ok(template.render(result.getContent()));
 
