@@ -6,9 +6,9 @@ import play.libs.F;
 import play.mvc.Result;
 
 import com.stys.platform.pages.Service;
-import com.stys.platform.pages.impl.Page;
+import com.stys.platform.pages.impl.domain.ContentResult;
+import com.stys.platform.pages.impl.domain.Page;
 import com.stys.platform.pages.impl.edit.EditPlugin;
-import com.stys.platform.pages.impl.utils.ContentResult;
 import com.stys.platform.pages.impl.view.ViewPlugin;
 
 public class Actions extends play.mvc.Controller {

@@ -7,8 +7,9 @@ create table page (
   id                        bigint not null,
   namespace                 varchar(255),
   key                       varchar(255),
+  access                    varchar(255),
+  state                     varchar(255),
   template                  varchar(255),
-  status                    varchar(255),
   constraint pk_page primary key (id))
 ;
 

@@ -1,36 +1,34 @@
 package com.stys.platform.pages;
 
+import play.mvc.Controller;
+
 
 /**
  * Result helpers
  */
-public class Results<T> {
+public class Results extends Controller {
 
-	public Result<T> Ok(T content) {
+	public <T> Result<T> Ok(T content) {
         return new SimpleResult<T>(content, Result.Status.Ok);
 	}
 	
-	public Result<T> Redirect(T content) {
-		return new SimpleResult<T>(content, Result.Status.Redirect);
-	}
-	
-	public Result<T> BadRequest(T content) {
+	public <T> Result<T> BadRequest(T content) {
 		return new SimpleResult<T>(content, Result.Status.BadRequest);
 	}
 	
-	public Result<T> Unauthorized(T content) {
+	public <T> Result<T> Unauthorized(T content) {
 		return new SimpleResult<T>(content, Result.Status.Unauthorized);
 	}
 	
-    public Result<T> Forbidden(T content) {
+    public <T> Result<T> Forbidden(T content) {
         return new SimpleResult<T>(content, Result.Status.Forbidden);
     }
 
-    public Result<T> NotFound(T content) {
+    public <T> Result<T> NotFound(T content) {
         return new SimpleResult<T>(content, Result.Status.NotFound);
     }
     
-    public <U> Result<U> map(Result<T> previous, U content) {
+    public <U, T> Result<U> map(Result<T> previous, U content) {
     	return new SimpleResult<U>(content, previous.getStatus());
     }
     

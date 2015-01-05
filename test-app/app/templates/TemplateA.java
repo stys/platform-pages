@@ -2,10 +2,10 @@ package templates;
 
 import play.mvc.Content;
 
-import com.stys.platform.pages.Template;
-import com.stys.platform.pages.impl.Page;
+import com.stys.platform.pages.impl.domain.Page;
+import com.stys.platform.pages.impl.domain.Template;
 
-public class TemplateA implements Template<Page> {
+public class TemplateA implements Template {
 
     @Override
     public Content render(Page page) {

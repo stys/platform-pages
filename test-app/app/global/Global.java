@@ -5,10 +5,12 @@ import play.Play;
 import play.libs.F;
 
 import com.stys.platform.pages.Service;
-import com.stys.platform.pages.impl.Page;
+import com.stys.platform.pages.impl.domain.Access;
+import com.stys.platform.pages.impl.domain.ContentResult;
+import com.stys.platform.pages.impl.domain.Page;
+import com.stys.platform.pages.impl.domain.State;
 import com.stys.platform.pages.impl.edit.EditPlugin;
 import com.stys.platform.pages.impl.models.Revision;
-import com.stys.platform.pages.impl.utils.ContentResult;
 
 /**
  *
@@ -29,7 +31,8 @@ public class Global extends GlobalSettings {
             Page alice = new Page();
             alice.namespace = "alice";
             alice.key = "down-the-rabbit-hole";
-            alice.status = com.stys.platform.pages.impl.Page.PUBLISHED;
+            alice.access = Access.Protected;
+            alice.state = State.Published;
             alice.template = "a";
             alice.title = "Alice in Wonderland";
             alice.source = 
@@ -44,6 +47,8 @@ public class Global extends GlobalSettings {
             Page bob = new Page();
             bob.namespace = "bob_marley";
             bob.key = "home";
+            bob.access = Access.Protected;
+            bob.state = State.Published;
             bob.template = "b";
             bob.title = "Bob Marley";
             bob.source = 

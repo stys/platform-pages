@@ -1,16 +1,27 @@
 package com.stys.platform.pages.impl;
 
+import play.Application;
 import play.libs.F;
 
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Results;
 import com.stys.platform.pages.Service;
+import com.stys.platform.pages.impl.domain.Access;
+import com.stys.platform.pages.impl.domain.Page;
+import com.stys.platform.pages.impl.domain.State;
 
 /**
  * Implementation of repository
  */
-public class DatabasePagesRepository extends Results<Page> implements Service<Result<Page>, Page> {
+public class DatabasePagesRepository extends Results implements Service<Result<Page>, Page> {
 
+	/**
+	 * Conventional injecting constructor
+	 */
+	public DatabasePagesRepository(Application application, Service<Result<Page>, Page> delegate) {
+		/* Empty */
+	}
+	
 	/**
 	 * Creates a new revision, when called without a specific revision. Otherwise
 	 * overwrites the contents of the specified revision. 
@@ -31,10 +42,15 @@ public class DatabasePagesRepository extends Results<Page> implements Service<Re
 				com.stys.platform.pages.impl.models.Page.create(namespace, key, page);
 
 			} else {
-				// update template
-				entity.status = page.status;
+				
+				// update metadata
+				entity.access = page.access.name();
+				entity.state = page.state.name();
 				entity.template = page.template;
 				entity.save();
+				
+				// check that content changed
+				// FIXME: should not create new revision if content did not change 
 				
 				// new revision of existing page
 				com.stys.platform.pages.impl.models.Revision.create(entity, page.title, page.source, page.content);
@@ -62,8 +78,18 @@ public class DatabasePagesRepository extends Results<Page> implements Service<Re
 				.eq("key", key)
 				.findUnique();
 
+		// Check page is found
 		if (null == entity) {
-			return NotFound(null);
+			
+			// Stub return page
+			Page stub = new Page();
+			stub.namespace = namespace;
+			stub.key = key;
+			
+			// THIS DEFINES ACCESS LEVEL FOR CREATING NEW PAGES
+			stub.access = Access.Open; 
+					
+			return NotFound(stub);
 		}
 
 		// Find revision
@@ -102,7 +128,8 @@ public class DatabasePagesRepository extends Results<Page> implements Service<Re
     	
     	page.namespace = entity.namespace;
 		page.key = entity.key;
-		page.status = entity.status;
+		page.access = Access.valueOf(entity.access);
+		page.state = State.valueOf(entity.state);
 		page.template = entity.template;
 
 		page.revision = revision.revision;

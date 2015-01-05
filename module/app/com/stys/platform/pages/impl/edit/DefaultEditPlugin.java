@@ -1,22 +1,23 @@
 package com.stys.platform.pages.impl.edit;
 
-import java.util.Map;
+import java.lang.reflect.Constructor;
 
 import play.Application;
 import play.Logger;
 import play.mvc.Content;
 
-import com.stys.platform.pages.Processor;
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Service;
-import com.stys.platform.pages.Template;
-import com.stys.platform.pages.impl.*;
-import com.stys.platform.pages.impl.utils.AccessUtils;
-import com.stys.platform.pages.impl.utils.ContentResult;
-import com.stys.platform.pages.impl.utils.ContentResultService;
-import com.stys.platform.pages.impl.utils.TemplateUtils;
+import com.stys.platform.pages.impl.domain.ContentResult;
+import com.stys.platform.pages.impl.domain.ContentResultAdapter;
+import com.stys.platform.pages.impl.domain.Page;
 
 public class DefaultEditPlugin extends EditPlugin {
+	
+	private static final String TEMPLATE_SWITCHER_KEY = "com.stys.platform.pages.edit.template.switcher";
+	private static final String ACCESS_MANAGER_KEY = "com.stys.platform.pages.edit.access.manager";
+	private static final String PROCESSOR_KEY = "com.stys.platform.pages.edit.processor";
+	private static final String REPOSITORY_KEY = "com.stys.platform.pages.edit.repository";
 	
 	/*
 	 * Instance of application
@@ -39,42 +40,59 @@ public class DefaultEditPlugin extends EditPlugin {
 	
 		// Trace
         Logger.debug(String.format("picked %s", this.getClass().getSimpleName()));
-        
-        // Load view templates
-        Map<String, Template<Page>> templates = TemplateUtils.loadTemplates(application);
   
-        // Load editor template
-        Template<Page> editor = TemplateUtils.loadEditorTemplate(application, templates.keySet());
-        
-        // Implementation of repository service
-		Service<Result<Page>, Page> repository = new DatabasePagesRepository();
-
-		// Implementation of processor
-		Processor<Page> converter = new MarkdownHtmlConverter();
-		
-		// Access manager
-		Service<Result<Content>, Page> access = AccessUtils.getEditAccessManager(application);
-		
-		// Basic service
-		Service<Result<Content>, Page> pages = new BasicService<>(editor, repository);
-		
-		// Edit service
-		Service<Result<Content>, Page> edit = new BasicEditService(pages, editor, converter);
-		
-		// Access managed service
-		Service<Result<Content>, Page> managed = new AccessManagedService<Content, Page>(edit, access);
-
-		// Convert to ContentResult
-		Service<ContentResult, Page> wrapped = new ContentResultService(managed);
-		
-        // Create and store an instance of show service
-        this.service = wrapped;
+        // Load services
+        try {
+        	
+        	// Repository
+        	String name = this.application.configuration().getString(REPOSITORY_KEY);
+        	Class<?> clazz = this.application.classloader().loadClass(name);
+        	Constructor<?> constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Page>, Page> repository = 
+				(Service<Result<Page>, Page>) constructor.newInstance(this.application, null);
+        	Logger.debug(String.format("Picked %s", name));
+        	
+        	// Processor
+        	name = this.application.configuration().getString(PROCESSOR_KEY);
+        	clazz = this.application.classloader().loadClass(name);
+        	constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Page>, Page> processor = 
+				(Service<Result<Page>, Page>) constructor.newInstance(this.application, repository);
+        	Logger.debug(String.format("Picked %s", name));
+        	
+        	// Access manager
+        	name = this.application.configuration().getString(ACCESS_MANAGER_KEY);
+        	clazz = this.application.classloader().loadClass(name);
+        	constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Page>, Page> manager = 
+				(Service<Result<Page>, Page>) constructor.newInstance(this.application, processor);
+        	Logger.debug(String.format("Picked %s", name));
+        	
+        	// Template switcher
+        	name = this.application.configuration().getString(TEMPLATE_SWITCHER_KEY);
+        	clazz = this.application.classloader().loadClass(name);
+        	constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Content>, Page> switcher = 
+				(Service<Result<Content>, Page>) constructor.newInstance(this.application, manager);
+        	Logger.debug(String.format("Picked %s", name));
+        	
+        	// Assembly
+        	this.service = new ContentResultAdapter(switcher);
+        	
+        } catch(Exception ex) {
+        	throw new RuntimeException(ex);        	        	
+        }
 		
 	}
-	
+
 	@Override
 	public Service<ContentResult, Page> getPagesService() {
 		return this.service;
 	}
 	
+		
 }

@@ -1,17 +1,17 @@
 package com.stys.platform.pages.impl.view;
 
-import java.util.Map;
+import java.lang.reflect.Constructor;
 
-import com.stys.platform.pages.*;
-import com.stys.platform.pages.impl.utils.ContentResult;
-import com.stys.platform.pages.impl.utils.ContentResultService;
 import play.Application;
 import play.Logger;
-
-import com.stys.platform.pages.impl.*;
-import com.stys.platform.pages.impl.utils.AccessUtils;
-import com.stys.platform.pages.impl.utils.TemplateUtils;
 import play.mvc.Content;
+
+import com.stys.platform.pages.Plugin;
+import com.stys.platform.pages.Result;
+import com.stys.platform.pages.Service;
+import com.stys.platform.pages.impl.domain.ContentResult;
+import com.stys.platform.pages.impl.domain.ContentResultAdapter;
+import com.stys.platform.pages.impl.domain.Page;
 
 /**
  * Implementation of a simple show plugin with a predefined template and
@@ -19,6 +19,11 @@ import play.mvc.Content;
  */
 public class DefaultViewPlugin extends ViewPlugin {
 
+	private static final String TEMPLATE_SWITCHER_KEY = "com.stys.platform.pages.view.template.switcher";
+	private static final String ACCESS_MANAGER_KEY = "com.stys.platform.pages.view.access.manager";
+	private static final String PROCESSOR_KEY = "com.stys.platform.pages.view.processor";
+	private static final String REPOSITORY_KEY = "com.stys.platform.pages.view.repository";
+	
 	/*
 	 * Instance of application
 	 */
@@ -43,33 +48,52 @@ public class DefaultViewPlugin extends ViewPlugin {
     @Override
     public void onStart() {
 
-    	// Trace
-        Logger.debug(String.format("picked %s", this.getClass().getSimpleName()));
-        
-        // Load templates
-        Map<String, Template<Page>> templates = TemplateUtils.loadTemplates(application);
-        
-        // Create template switcher
-        Template<Page> switcher = new TemplateSwitcher(templates);
-        
-        // Implementation of repository service
-        Service<Result<Page>, Page> repository = new DatabasePagesRepository();
-
-        // Basic service
-        Service<Result<Content>, Page> basic = new BasicService<>(switcher, repository);
-        
-        // Access manager
-        Service<Result<Content>, Page> access = AccessUtils.getViewAccessManager(application);
-        
-        // Compose
-        Service<Result<Content>, Page> managed = new AccessManagedService<Content, Page>(basic, access);
-        
-        // Convert to ContentResult
-        Service<ContentResult, Page> wrapped = new ContentResultService(managed);
-
-        // Create and store an instance of show service
-        this.service = wrapped;
-
+    	 // Load services
+        try {
+        	
+        	// Repository
+        	String name = this.application.configuration().getString(REPOSITORY_KEY);
+        	Logger.debug(String.format("Picked %s", name));
+        	Class<?> clazz = this.application.classloader().loadClass(name);
+        	Constructor<?> constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Page>, Page> repository = 
+				(Service<Result<Page>, Page>) constructor.newInstance(this.application, null);
+        	
+        	// Processor
+        	name = this.application.configuration().getString(PROCESSOR_KEY);
+        	Logger.debug(String.format("Picked %s", name));
+        	clazz = this.application.classloader().loadClass(name);
+        	constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Page>, Page> processor = 
+				(Service<Result<Page>, Page>) constructor.newInstance(this.application, repository);
+        	
+        	// Access manager
+        	name = this.application.configuration().getString(ACCESS_MANAGER_KEY);
+        	Logger.debug(String.format("Picked %s", name));
+        	clazz = this.application.classloader().loadClass(name);
+        	constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Page>, Page> manager = 
+				(Service<Result<Page>, Page>) constructor.newInstance(this.application, processor);
+        	
+        	// Template switcher
+        	name = this.application.configuration().getString(TEMPLATE_SWITCHER_KEY);
+        	Logger.debug(String.format("Picked %s", name));
+        	clazz = this.application.classloader().loadClass(name);
+        	constructor = clazz.getConstructor(Application.class, Service.class);
+        	@SuppressWarnings("unchecked")
+			Service<Result<Content>, Page> switcher = 
+				(Service<Result<Content>, Page>) constructor.newInstance(this.application, manager);
+        	
+        	// Assembly
+        	this.service = new ContentResultAdapter(switcher);
+        	
+        } catch(Exception ex) {
+        	throw new RuntimeException(ex);        	        	
+        }
+    	
     }
 
     /**

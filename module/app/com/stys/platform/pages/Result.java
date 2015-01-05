@@ -10,7 +10,7 @@ public interface Result<T> {
     public Status getStatus();
 
     public enum Status {
-        Ok, Redirect, BadRequest, NotFound, Unauthorized, Forbidden
+        Ok, BadRequest, NotFound, Unauthorized, Forbidden
     }
 
 }

@@ -13,7 +13,7 @@ import play.libs.F;
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.DatabasePagesRepository;
-import com.stys.platform.pages.impl.Page;
+import com.stys.platform.pages.impl.domain.Page;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -58,7 +58,6 @@ public class DatabaseRepositoryTest {
 				Page page = new Page();
 				page.namespace = "alice";
 				page.key = "down-the-rabbit-hole";
-				page.status = com.stys.platform.pages.impl.Page.PUBLISHED;
 				page.template = "a";
 				page.title = "Alice in Wonderland";
 				page.source = 

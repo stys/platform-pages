@@ -1,4 +1,4 @@
-@(page: com.stys.platform.pages.impl.Page)
+@(page: com.stys.platform.pages.impl.domain.Page)
 
 @main(page.title) {
 
@@ -6,7 +6,7 @@
 
     <p>Revision: @page.revision </p>
 
-    <p>Revision: @page.status </p>
+    <p>State: @page.state </p>
 
     <article id="content">
         @Html(page.content)

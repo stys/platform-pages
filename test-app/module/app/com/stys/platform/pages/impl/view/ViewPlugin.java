@@ -1,8 +1,8 @@
 package com.stys.platform.pages.impl.view;
 
 import com.stys.platform.pages.Plugin;
-import com.stys.platform.pages.impl.utils.ContentResult;
-import com.stys.platform.pages.impl.Page;
+import com.stys.platform.pages.impl.domain.ContentResult;
+import com.stys.platform.pages.impl.domain.Page;
 
 /**
  * Resolvable name 
