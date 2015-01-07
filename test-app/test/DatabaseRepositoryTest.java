@@ -52,7 +52,7 @@ public class DatabaseRepositoryTest {
 							
 				// Create a repository service
 				Service<Result<Page>, Page> repository = 
-						new DatabasePagesRepository();
+						new DatabasePagesRepository(null, null);
 				
 				// Prepare a test page
 				Page page = new Page();

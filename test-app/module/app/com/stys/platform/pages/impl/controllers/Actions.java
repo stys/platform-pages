@@ -1,7 +1,12 @@
 package com.stys.platform.pages.impl.controllers;
 
+import java.util.List;
+import java.util.Map;
+
+import play.Logger;
 import play.Play;
 import play.data.Form;
+import play.data.validation.ValidationError;
 import play.libs.F;
 import play.mvc.Result;
 
@@ -82,8 +87,18 @@ public class Actions extends play.mvc.Controller {
 
         // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
-        Page page = filled.get();
+        if( filled.hasErrors() ) {
+        	for (Map.Entry<String, List<ValidationError>> e : filled.errors().entrySet()) {
+        		Logger.error(e.getKey() + " " + e.getValue().get(0).message());
+        	}
+        }
+    	
+    	
+    	Page page = filled.get();
         
+    	Logger.info(page.toString());
+    	
+    	
         // Retrieve show service
         Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
 

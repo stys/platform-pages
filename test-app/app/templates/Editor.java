@@ -20,15 +20,15 @@ public class Editor implements Template {
 		List<String> templates = Arrays.asList("a", "b");
 		
 		// State options
-		List<String> states = new ArrayList<>();
+		List<State> states = new ArrayList<>();
 		for ( State s : State.values() ) {
-			states.add(s.name());
+			states.add(s);
 		}
 		
 		// Access options
-		List<String> access = new ArrayList<>();
+		List<Access> access = new ArrayList<>();
 		for ( Access a : Access.values() ) {
-			access.add(a.name());
+			access.add(a);
 		}		
 		
 		// render editor with page content
