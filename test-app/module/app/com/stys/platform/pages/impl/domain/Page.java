@@ -24,8 +24,8 @@ public class Page {
 
 	@Override
 	public String toString() {
-		return String.format("n: %s, k: %s, st: %s, a: %s, t: %s, r: %d, so: %s, c: %s", 
-				namespace, key, state, access.name(), template, revision, source, content);
+		return String.format("namespace: %s, key: %s, owner: %s, access: %s, state: %s, template: %s, revision: %d, src: %s, content: %s", 
+				namespace, key, owner, access.name(), state.name(), template, revision, source, content);
 	}
 	
 }

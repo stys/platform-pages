@@ -18,18 +18,19 @@ public class MyUserService extends Controller implements UserService {
 
 	@Override
 	public User getUser() {
-		return new User() {
-			
-			@Override
-			public List<Role> getRoles() {
-				return Arrays.asList(Role.Administrator);
-			}
-			
-			@Override
-			public String getID() {
-				return "user";
-			}
-		};
+		return null;
+//		return new User() {
+//			
+//			@Override
+//			public List<Role> getRoles() {
+//				return Arrays.asList(Role.Moderator);
+//			}
+//			
+//			@Override
+//			public String getID() {
+//				return "user";
+//			}
+//		};
 	}
 	
 	

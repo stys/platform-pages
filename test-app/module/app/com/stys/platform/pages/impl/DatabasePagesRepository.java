@@ -85,10 +85,7 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 			Page stub = new Page();
 			stub.namespace = namespace;
 			stub.key = key;
-			
-			// THIS DEFINES ACCESS LEVEL FOR CREATING NEW PAGES
-			stub.access = Access.Open; 
-					
+								
 			return NotFound(stub);
 		}
 

@@ -87,19 +87,18 @@ public class Actions extends play.mvc.Controller {
 
         // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
-        if( filled.hasErrors() ) {
+        
+    	// Check errors in form
+    	if( filled.hasErrors() ) {
         	for (Map.Entry<String, List<ValidationError>> e : filled.errors().entrySet()) {
         		Logger.error(e.getKey() + " " + e.getValue().get(0).message());
         	}
         }
     	
-    	
+    	// Get binded page data
     	Page page = filled.get();
-        
-    	Logger.info(page.toString());
-    	
-    	
-        // Retrieve show service
+            	
+        // Get pages edit service
         Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
 
   	    // Store as new revision

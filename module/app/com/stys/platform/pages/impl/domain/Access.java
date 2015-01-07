@@ -4,9 +4,9 @@ package com.stys.platform.pages.impl.domain;
  * Access options for page
  */
 public enum Access {
-	Private, 	// Can view: owner, administrator; Can edit: owner, administrator
-	Internal,   // Can view: owner, moderator, administrator; Can edit: owner, moderator, administrator
-	Protected,	// Can view: user; Can edit: owner, moderator, administrator
-	Public, 	// Can view: any; Can edit: owner, moderator, administrator
-	Open		// Can view: any; Can edit: any
+	Private, // Can create: moderator, can view: owner, can edit: owner
+	Internal, // Can create: moderator, can view: moderator, can edit: moderator
+	Protected,	// Can create: moderator, can view: user, can edit: moderator
+	Public, // Can create: moderator, can view: anonymous, can edit: moderator 
+	Open // Can create: user, can view: anonymous, can edit: user
 }

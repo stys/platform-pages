@@ -95,17 +95,17 @@ public class ViewAccessManager extends Results implements Service<Result<Page>, 
 		boolean isAdministrator = isUserPresent && user.getRoles().contains(Role.Administrator);
 			
 		@SuppressWarnings("unused")
-		boolean isDraft = state.equals(State.Draft);
-		boolean isPublished = state.equals(State.Published);
-		boolean isClosed = state.equals(State.Closed);
-		boolean isDeleted = state.equals(State.Deleted);
+		boolean isDraft = State.Draft.equals(state);
+		boolean isPublished = State.Published.equals(state);
+		boolean isClosed = State.Closed.equals(state);
+		boolean isDeleted = State.Deleted.equals(state);
 		
-		boolean isPrivate = access.equals(Access.Private);
+		boolean isPrivate = Access.Private.equals(access);
 		@SuppressWarnings("unused")
-		boolean isInternal = access.equals(Access.Internal);
-		boolean isProtected = access.equals(Access.Protected);
-		boolean isPublic = access.equals(Access.Public);
-		boolean isOpen = access.equals(Access.Open);
+		boolean isInternal = Access.Internal.equals(access);;
+		boolean isProtected = Access.Protected.equals(access);;
+		boolean isPublic = Access.Public.equals(access);;
+		boolean isOpen = Access.Open.equals(access);;
 		
 		// No user present
 		if( ! isUserPresent ) {

@@ -92,19 +92,25 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 		boolean isAdministrator = isUserPresent && user.getRoles().contains(Role.Administrator);
 			
 		@SuppressWarnings("unused")
-		boolean isDraft = state.equals(State.Draft);
-		boolean isPublished = state.equals(State.Published);
-		boolean isClosed = state.equals(State.Closed);
-		boolean isDeleted = state.equals(State.Deleted);
+		boolean isDraft = State.Draft.equals(state);
+		boolean isPublished = State.Published.equals(state);
+		boolean isClosed = State.Closed.equals(state);
+		boolean isDeleted = State.Deleted.equals(state);
 		
-		boolean isPrivate = access.equals(Access.Private);
+		boolean isPrivate = Access.Private.equals(access);
 		@SuppressWarnings("unused")
-		boolean isInternal = access.equals(Access.Internal);
+		boolean isInternal = Access.Internal.equals(access);
 		@SuppressWarnings("unused")
-		boolean isProtected = access.equals(Access.Protected);
+		boolean isProtected = Access.Protected.equals(access);
 		@SuppressWarnings("unused")
-		boolean isPublic = access.equals(Access.Public);
-		boolean isOpen = access.equals(Access.Open);
+		boolean isPublic = Access.Public.equals(access);
+		boolean isOpen = Access.Open.equals(access);
+		
+		// If creating - set default access level
+		if ( isCreating ) {
+			previous.getContent().state = State.Draft;
+			previous.getContent().access = Access.Protected;
+		}
 		
 		// No user present
 		if(! isUserPresent) {
@@ -201,7 +207,7 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 		if( isCreating ) {
 			page.owner = user.getID();
 		}
-				
+						
 		// Simple user, not owner of the page
 		if( (!isOwner) && isUser ) {
 			// Registered users can edit published open pages and create new open pages
