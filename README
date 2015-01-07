@@ -1,0 +1,25 @@
+# Customizable and extensible wiki module for Play Framework 2.x (java).
+
+## Overview
+
+## Design 
+
+## Integration and customization
+
+Start by setting up a dependency in the `build.sbt` of your project
+```
+resolvers += "Snapshots" at "https://raw.github.com/stys/maven-snapshots/master/"
+
+libraryDependencies ++= Seq(
+  ...,	
+  "com.stys" %% "platform-pages" % "1.0.0-SNAPSHOT",
+  javaJdbc,
+  javaEbean
+)   
+```
+
+## Extend pages
+
+## Contribute
+
+
