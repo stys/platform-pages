@@ -10,26 +10,29 @@ create table page (
   access                    varchar(255),
   state                     varchar(255),
   template                  varchar(255),
+  revision_id               bigint,
   constraint pk_page primary key (id))
 ;
 
 create table revision (
-  revision                  bigint not null,
+  id                        bigint not null,
   page_id                   bigint,
   title                     varchar(255),
   source                    clob,
   content                   clob,
   create_date_time          timestamp not null,
   update_date_time          timestamp not null,
-  constraint pk_revision primary key (revision))
+  constraint pk_revision primary key (id))
 ;
 
 create sequence page_seq;
 
 create sequence revision_seq;
 
-alter table revision add constraint fk_revision_page_1 foreign key (page_id) references page (id) on delete restrict on update restrict;
-create index ix_revision_page_1 on revision (page_id);
+alter table page add constraint fk_page_revision_1 foreign key (revision_id) references revision (id) on delete restrict on update restrict;
+create index ix_page_revision_1 on page (revision_id);
+alter table revision add constraint fk_revision_page_2 foreign key (page_id) references page (id) on delete restrict on update restrict;
+create index ix_revision_page_2 on revision (page_id);
 
 
 

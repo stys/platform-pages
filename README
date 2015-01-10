@@ -6,6 +6,8 @@
 
 ## Integration and customization
 
+The default implementation uses the 
+
 Start by setting up a dependency in the `build.sbt` of your project
 ```
 resolvers += "Snapshots" at "https://raw.github.com/stys/maven-snapshots/master/"
@@ -17,6 +19,8 @@ libraryDependencies ++= Seq(
   javaEbean
 )   
 ```
+
+In the `application.conf` of your project modify the 
 
 ## Extend pages
 

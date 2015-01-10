@@ -40,7 +40,7 @@ public class Revision extends Model {
 	 * Global revision number. 
 	 */ 
 	@Id
-    public Long revision;
+    public Long id;
 
     @ManyToOne
     public Page page;

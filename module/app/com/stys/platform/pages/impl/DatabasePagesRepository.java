@@ -3,12 +3,15 @@ package com.stys.platform.pages.impl;
 import play.Application;
 import play.libs.F;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.TxRunnable;
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Results;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.domain.Access;
 import com.stys.platform.pages.impl.domain.Page;
 import com.stys.platform.pages.impl.domain.State;
+import com.stys.platform.pages.impl.models.Revision;
 
 /**
  * Implementation of repository
@@ -27,12 +30,12 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 	 * overwrites the contents of the specified revision. 
 	 */
 	@Override
-    public Result<Page> put(Page page, String namespace, String key, F.Option<Long> revision) {
+    public Result<Page> put(final Page page, String namespace, String key, F.Option<Long> revision) {
 						
 		if (revision.isEmpty()) {
 
 			// Try to find page entity
-			com.stys.platform.pages.impl.models.Page entity = com.stys.platform.pages.impl.models.Page.find.where()
+			final com.stys.platform.pages.impl.models.Page entity = com.stys.platform.pages.impl.models.Page.find.where()
 					.eq("namespace", namespace)
 					.eq("key", key)
 					.findUnique();
@@ -47,13 +50,21 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 				entity.access = page.access.name();
 				entity.state = page.state.name();
 				entity.template = page.template;
-				entity.save();
-				
+								
 				// check that content changed
 				// FIXME: should not create new revision if content did not change 
 				
-				// new revision of existing page
-				com.stys.platform.pages.impl.models.Revision.create(entity, page.title, page.source, page.content);
+				// Transactional save 
+		        Ebean.execute(new TxRunnable() {
+		            @Override
+		            public void run() {
+		            	// new revision of existing page
+						Revision rev = com.stys.platform.pages.impl.models.Revision.create(entity, page.title, page.source, page.content);
+						// set active revision
+						entity.revision = rev;
+						entity.save();		
+		            }
+		        });			
 			}
 			
 			return get(namespace, key, revision);	
@@ -90,7 +101,7 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 		}
 
 		// Find revision
-		com.stys.platform.pages.impl.models.Revision rev = null;
+		com.stys.platform.pages.impl.models.Revision rev = entity.revision;
 
 		// If specific revision requested
 		if (revision.isDefined()) {
@@ -98,17 +109,8 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 			// Find by revision id
 			rev = com.stys.platform.pages.impl.models.Revision.find.byId(revision.get());
 
-		// Otherwise fetch latest revision
-		} else {
-
-			rev = com.stys.platform.pages.impl.models.Revision.find.where()
-					.eq("page", entity)
-					.orderBy("revision desc")
-					.setMaxRows(1)
-					.findUnique();
-			
 		}
-
+			
 		if (null == rev) {
 			return NotFound(null);
 		}
@@ -129,7 +131,7 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 		page.state = State.valueOf(entity.state);
 		page.template = entity.template;
 
-		page.revision = revision.revision;
+		page.revision = revision.id;
 		page.title = revision.title;
 		page.source = revision.source;
 		page.content = revision.content;

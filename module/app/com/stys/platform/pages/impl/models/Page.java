@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import play.db.ebean.Model;
 
@@ -34,7 +35,10 @@ public class Page extends Model {
     public String state;
     
     public String template;
-       
+    
+    @OneToOne
+    public Revision revision;
+    
     @OneToMany(mappedBy = "page")
     public List<Revision> revisions;
 
@@ -56,6 +60,8 @@ public class Page extends Model {
         revision.source = page.source;
         revision.content = page.content;
                 
+        entity.revision = revision;
+        
         // Transactional save 
         Ebean.execute(new TxRunnable() {
             @Override
