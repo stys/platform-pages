@@ -1,6 +1,6 @@
 # Extensible wiki module for Play 2.3.x
 
-Pages is a simple and extensible **wiki** module for Play Framework (Java) applications. 
+Pages is a simple and extensible **wiki** module for Play Framework (Java) applications. Default implementation uses SQL database storage (via Ebean) and markdown syntax for pages (via markdown4j).  
 
 ## Usage
 
