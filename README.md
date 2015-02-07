@@ -8,7 +8,7 @@ Pages is a simple and extensible **wiki** module for Play Framework (Java) appli
 
 Add resolver and dependency to `build.sbt` 
 
-'''
+```sbt
 resolvers += "Platform releases" at "https://raw.github.com/stys/maven-releases/master/"
 
 libraryDependencies ++= Seq(
@@ -18,6 +18,6 @@ libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean
 )     
-'''
+```
 
 
