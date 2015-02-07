@@ -1,17 +1,14 @@
 name := "test-app"
 
-version := "1.0-SNAPSHOT"
+version := "1.1.0"
+
+scalaVersion := "2.11.2"
 
 libraryDependencies ++= Seq(
+  "com.stys" %% "platform-pages" % "1.1.0",
   javaJdbc,
   javaEbean,
   cache
 )     
 
-play.Project.playJavaSettings
-
-lazy val pages = project.in(file("./module"))
-
-lazy val main = project.in(file("."))
-	.dependsOn(pages)
-	.aggregate(pages)
+lazy val root = project.in(file(".")).enablePlugins(PlayJava)

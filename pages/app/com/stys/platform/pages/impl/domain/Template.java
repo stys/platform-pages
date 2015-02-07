@@ -1,6 +1,6 @@
 package com.stys.platform.pages.impl.domain;
 
-import play.mvc.Content;
+import play.twirl.api.Content;
 
 public interface Template {
 

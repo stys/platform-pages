@@ -31,7 +31,7 @@ public class Global extends GlobalSettings {
             Page alice = new Page();
             alice.namespace = "alice";
             alice.key = "down-the-rabbit-hole";
-            alice.access = Access.Protected;
+            alice.access = Access.Public;
             alice.state = State.Published;
             alice.template = "a";
             alice.title = "Alice in Wonderland";

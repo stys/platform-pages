@@ -3,7 +3,7 @@ package com.stys.platform.pages.impl.domain;
 import com.stys.platform.pages.Service;
 
 import play.libs.F;
-import play.mvc.Content;
+import play.twirl.api.Content;
 
 import com.stys.platform.pages.Result;
 

@@ -1,6 +1,6 @@
 package templates;
 
-import play.mvc.Content;
+import play.twirl.api.Content;
 
 import com.stys.platform.pages.impl.domain.Page;
 import com.stys.platform.pages.impl.domain.Template;

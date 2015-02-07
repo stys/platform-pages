@@ -6,7 +6,7 @@ import java.util.Map;
 
 import play.Application;
 import play.libs.F.Option;
-import play.mvc.Content;
+import play.twirl.api.Content;
 
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Results;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import play.mvc.Content;
+import play.twirl.api.Content;
 
 import com.stys.platform.pages.impl.domain.Access;
 import com.stys.platform.pages.impl.domain.Page;

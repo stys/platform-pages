@@ -1,7 +1,7 @@
 package com.stys.platform.pages.impl.domain;
 
 import com.stys.platform.pages.Result;
-import play.mvc.Content;
+import play.twirl.api.Content;
 import play.mvc.Results;
 
 public abstract class ContentResult implements Result<Content> {
