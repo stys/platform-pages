@@ -21,11 +21,11 @@ public class Global extends GlobalSettings {
 	
     @Override
     public void onStart(Application application) {
-
+        
         if (0 == Revision.find.findRowCount()) {
-       	
+
         	// Get page service (edit)
-        	Service<ContentResult, Page> service = Play.application().plugin(EditPlugin.class).getPagesService();
+        	Service<ContentResult, Page> service = Play.application().plugin(EditPlugin.class).getPageService();
         	
         	// Test page 1
             Page alice = new Page();
@@ -42,7 +42,7 @@ public class Global extends GlobalSettings {
               
             // Store test page 1
             service.put(alice, alice.namespace, alice.key, None);
-            
+
             // Test page 2
             Page bob = new Page();
             bob.namespace = "bob_marley";

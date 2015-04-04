@@ -97,10 +97,10 @@ public class DefaultViewPlugin extends ViewPlugin {
     }
 
     /**
-     * @see Plugin#getPagesService()
+     * @see Plugin#getPageService()
      */
     @Override
-    public Service<ContentResult, Page> getPagesService() {
+    public Service<ContentResult, Page> getPageService() {
         // Return an instance
     	return this.service;
     }

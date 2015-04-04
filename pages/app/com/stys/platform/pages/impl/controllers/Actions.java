@@ -33,7 +33,7 @@ public class Actions extends play.mvc.Controller {
     public static Result view(String namespace, String key) {
 
     	// Get show service from plugin
-        Service<ContentResult, Page> pages = Play.application().plugin(ViewPlugin.class).getPagesService();
+        Service<ContentResult, Page> pages = Play.application().plugin(ViewPlugin.class).getPageService();
         
         // Retrieve a page
         ContentResult result = pages.get(namespace, key, None);
@@ -69,7 +69,7 @@ public class Actions extends play.mvc.Controller {
     public static Result edit(String namespace, String key) {
 
         // Get show service
-    	Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
+    	Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPageService();
 
         // Get a requested page
         ContentResult result = pages.get(namespace, key, None);
@@ -99,7 +99,7 @@ public class Actions extends play.mvc.Controller {
     	Page page = filled.get();
             	
         // Get pages edit service
-        Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPagesService();
+        Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPageService();
 
   	    // Store as new revision
     	ContentResult result = pages.put(page, page.namespace, page.key, None);

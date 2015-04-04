@@ -90,7 +90,7 @@ public class DefaultEditPlugin extends EditPlugin {
 	}
 
 	@Override
-	public Service<ContentResult, Page> getPagesService() {
+	public Service<ContentResult, Page> getPageService() {
 		return this.service;
 	}
 	

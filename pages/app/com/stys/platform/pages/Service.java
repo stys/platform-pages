@@ -2,6 +2,11 @@ package com.stys.platform.pages;
 
 import play.libs.F;
 
+/**
+ * Generic pages service.
+ * @param <R> Data type returned by service
+ * @param <T> Data type consumed by service
+ */
 public interface Service<R, T> {
 
 	/**
