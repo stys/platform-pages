@@ -50,6 +50,10 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 				entity.access = page.access.name();
 				entity.state = page.state.name();
 				entity.template = page.template;
+				entity.metaInfo.summary = page.summary;
+				entity.metaInfo.thumbImage = page.thumbImage;
+				entity.metaInfo.metaDescription = page.metaDescription;
+				entity.metaInfo.metaKeyWords = page.metaKeyWords;
 								
 				// check that content changed
 				// FIXME: should not create new revision if content did not change 
@@ -62,7 +66,8 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 						Revision rev = com.stys.platform.pages.impl.models.Revision.create(entity, page.title, page.source, page.content);
 						// set active revision
 						entity.revision = rev;
-						entity.save();		
+						entity.save();
+						//entity.metaInfo.save();
 		            }
 		        });			
 			}
@@ -130,6 +135,10 @@ public class DatabasePagesRepository extends Results implements Service<Result<P
 		page.access = Access.valueOf(entity.access);
 		page.state = State.valueOf(entity.state);
 		page.template = entity.template;
+		page.summary = entity.metaInfo.summary;
+		page.thumbImage = entity.metaInfo.thumbImage;
+		page.metaDescription = entity.metaInfo.metaDescription;
+		page.metaKeyWords = entity.metaInfo.metaKeyWords;
 
 		page.revision = revision.id;
 		page.title = revision.title;

@@ -2,7 +2,7 @@ name := "platform-pages"
 
 organization := "com.stys"
 
-version := "1.1.2"
+version := "1.1.3"
 
 scalaVersion := "2.11.2"
 
