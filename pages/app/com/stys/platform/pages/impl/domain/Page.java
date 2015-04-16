@@ -21,11 +21,19 @@ public class Page {
 	public String source;
 
 	public String content;
+	
+	public String summary;
+	
+	public String thumbImage;
+	
+	public String metaDescription;
+	
+	public String metaKeyWords;
 
 	@Override
 	public String toString() {
-		return String.format("namespace: %s, key: %s, owner: %s, access: %s, state: %s, template: %s, revision: %d, src: %s, content: %s", 
-				namespace, key, owner, access.name(), state.name(), template, revision, source, content);
+		return String.format("namespace: %s, key: %s, owner: %s, access: %s, state: %s, template: %s, revision: %d, src: %s, content: %s, summary: %s, thumbImage: %s, metaDescription: %s, metaKeyWords: %s", 
+				namespace, key, owner, access.name(), state.name(), template, revision, source, content, summary, thumbImage, metaDescription, metaKeyWords);
 	}
 	
 }

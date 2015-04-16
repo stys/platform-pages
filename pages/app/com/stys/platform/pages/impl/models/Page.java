@@ -41,6 +41,9 @@ public class Page extends Model {
     
     @OneToMany(mappedBy = "page")
     public List<Revision> revisions;
+    
+    @OneToOne
+    public PageMetaInfo metaInfo;
 
     public static final Finder<Long, Page> find = new Finder<>(Long.class, Page.class);
 
@@ -48,6 +51,7 @@ public class Page extends Model {
 
         final Page entity = new Page();
         final Revision revision = new Revision();
+        final PageMetaInfo metaInfo = new PageMetaInfo();
 
         entity.namespace = page.namespace;
         entity.key = page.key;
@@ -61,6 +65,7 @@ public class Page extends Model {
         revision.content = page.content;
                 
         entity.revision = revision;
+        entity.metaInfo = metaInfo;
         
         // Transactional save 
         Ebean.execute(new TxRunnable() {
@@ -68,6 +73,7 @@ public class Page extends Model {
             public void run() {
                 entity.save();
                 revision.save();
+                metaInfo.save();
             }
         });
 
