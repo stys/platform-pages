@@ -64,7 +64,11 @@ public class DatabaseRepositoryTest {
 	            	"# Alice's Adventures in Wonderland\n "
 	            	+ "## CHAPTER I. Down the Rabbit-Hole"
 	            	+ "Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, 'and what is the use of a book,' thought Alice 'without pictures or conversations?' ";
-
+				page.summary = "Cаммари";
+				page.thumbImage = "tiger.png";
+				page.metaDescription = "Printing";
+				page.metaKeyWords = "Printer";
+				
 	            // Put
 	            repository.put(page, page.namespace, page.key, new F.None<Long>());
 				
