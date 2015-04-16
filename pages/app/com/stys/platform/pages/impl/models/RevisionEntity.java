@@ -10,10 +10,11 @@ import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
 
 /**
- * Simple implementation of database page storage.
+ * Page revision
  */
 @Entity
-public class Revision extends Model {
+@Table(name = "pages_revisions")
+public class RevisionEntity extends Model {
 
     /**
 	 * Default serial version ID
@@ -43,7 +44,7 @@ public class Revision extends Model {
     public Long id;
 
     @ManyToOne
-    public Page page;
+    public PageEntity page;
 
     public String title;
 
@@ -59,17 +60,7 @@ public class Revision extends Model {
     @UpdatedTimestamp
     public Timestamp updateDateTime;
 
-    public static final Finder<Long, Revision> find =
-            new Finder<Long, Revision>(Long.class, Revision.class);
-    
-    public static Revision create(Page page, String title, String source, String content) {
-    	Revision revision = new Revision();
-    	revision.page = page;
-        revision.title = title;
-        revision.source = source;
-    	revision.content = content;
-    	revision.save();
-    	return revision;
-    }
+    public static final Finder<Long, RevisionEntity> find =
+            new Finder<Long, RevisionEntity>(Long.class, RevisionEntity.class);
 
 }
