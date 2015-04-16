@@ -5,7 +5,7 @@ version := "1.1.0"
 scalaVersion := "2.11.2"
 
 libraryDependencies ++= Seq(
-  "com.stys" %% "platform-pages" % "1.1.2",
+  "com.stys" %% "platform-pages" % "1.1.3",
   javaJdbc,
   javaEbean,
   cache

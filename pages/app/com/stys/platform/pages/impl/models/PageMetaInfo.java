@@ -1,10 +1,12 @@
 package com.stys.platform.pages.impl.models;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import play.db.ebean.Model;
 
+@Entity
 public class PageMetaInfo extends Model{
 	/**
 	 * Default serial version id
