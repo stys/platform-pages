@@ -165,41 +165,44 @@ public class Repository extends Results implements Service<Result<Page>, Page> {
                 .eq("namespace", page.namespace)
                 .eq("key", page.key)
                 .findUnique();
-
+        
         // Create if not exists
         if (null == page_) {
-            create(page);
-        }
-
-        // Update page properties
-        page_.access = page.access.name();
-        page_.state = page.state.name();
-        page_.template = page.template;
-        
-        // Update meta information
-        final MetaEntity meta_ = page_.meta;
-        meta_.summary = page.summary;
-        meta_.thumb = page.thumb;
-        meta_.description = page.description;
-        meta_.keywords = page.keywords;
-
-        // Check if something changed in content
-        RevisionEntity r = page_.revision;
-        if (r.title.equals(page.title) && r.source.equals(page.source) && r.content.equals(page.content)) {
-            // Update without making new revision
-            txSave(page_, meta_, page_.revision);
+                create(page);
         } else {
-            // Create new revision
-            final RevisionEntity revision_ = new RevisionEntity();
-            revision_.page = page_;
-            revision_.title = page.title;
-            revision_.source = page.source;
-            revision_.content = page.content;
-            // Set reverse link
-            page_.revision = revision_;
-            // Transactional save
-            txSave(page_, meta_, revision_);
+       
+	        // Update page properties
+	        page_.access = page.access.name();
+	        page_.state = page.state.name();
+	        page_.template = page.template;
+	        
+	        // Update meta information
+	        final MetaEntity meta_ = page_.meta;
+	        meta_.summary = page.summary;
+	        meta_.thumb = page.thumb;
+	        meta_.description = page.description;
+	        meta_.keywords = page.keywords;
+        
+
+	        // Check if something changed in content
+	        RevisionEntity r = page_.revision;
+	        if (r.title.equals(page.title) && r.source.equals(page.source) && r.content.equals(page.content)) {
+	            // Update without making new revision
+	            txSave(page_, meta_, page_.revision);
+	        } else {
+	            // Create new revision
+	            final RevisionEntity revision_ = new RevisionEntity();
+	            revision_.page = page_;
+	            revision_.title = page.title;
+	            revision_.source = page.source;
+	            revision_.content = page.content;
+	            // Set reverse link
+	            page_.revision = revision_;
+	            // Transactional save
+	            txSave(page_, meta_, revision_);
+	        }
         }
+        
         
     }
 
