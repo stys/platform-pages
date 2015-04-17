@@ -112,6 +112,7 @@ public class Repository extends Results implements Service<Result<Page>, Page> {
 		page_.thumb = meta.thumb;
 		page_.description = meta.description;
 		page_.keywords = meta.keywords;
+		page_.category = meta.category;
 		
         page_.revision = revision.id;
 		page_.title = revision.title;
@@ -141,7 +142,8 @@ public class Repository extends Results implements Service<Result<Page>, Page> {
         meta_.summary = page.summary;
         meta_.thumb = page.thumb;
         meta_.description = page.description;
-        meta_.keywords = page.keywords;        
+        meta_.keywords = page.keywords;
+        meta_.category = page.category;
                 
         final RevisionEntity revision_ = new RevisionEntity();
         revision_.page = page_;
@@ -182,6 +184,7 @@ public class Repository extends Results implements Service<Result<Page>, Page> {
 	        meta_.thumb = page.thumb;
 	        meta_.description = page.description;
 	        meta_.keywords = page.keywords;
+	        meta_.category = page.category;
         
 
 	        // Check if something changed in content
