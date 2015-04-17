@@ -20,10 +20,13 @@ public class PageEntity extends Model {
 
     public String namespace;
 
+    @Column(name = "key_")
     public String key;
 
+    @Column(name = "access_")
     public String access;
 
+    @Column(name = "state_")
     public String state;
     
     public String template;

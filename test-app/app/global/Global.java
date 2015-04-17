@@ -10,7 +10,7 @@ import com.stys.platform.pages.impl.domain.ContentResult;
 import com.stys.platform.pages.impl.domain.Page;
 import com.stys.platform.pages.impl.domain.State;
 import com.stys.platform.pages.impl.edit.EditPlugin;
-import com.stys.platform.pages.impl.models.Revision;
+import com.stys.platform.pages.impl.models.RevisionEntity;
 
 /**
  *
@@ -22,7 +22,7 @@ public class Global extends GlobalSettings {
     @Override
     public void onStart(Application application) {
         
-        if (0 == Revision.find.findRowCount()) {
+        if (0 == RevisionEntity.find.findRowCount()) {
 
         	// Get page service (edit)
         	Service<ContentResult, Page> service = Play.application().plugin(EditPlugin.class).getPageService();

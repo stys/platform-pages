@@ -3,7 +3,18 @@
 
 # --- !Ups
 
-create table page (
+create table pages_meta (
+  id                        bigint not null,
+  summary                   varchar(255),
+  thumb                     varchar(255),
+  description               varchar(255),
+  keywords                  varchar(255),
+  category                  varchar(255),
+  page_id                   bigint,
+  constraint pk_pages_meta primary key (id))
+;
+
+create table pages (
   id                        bigint not null,
   namespace                 varchar(255),
   key                       varchar(255),
@@ -11,21 +22,11 @@ create table page (
   state                     varchar(255),
   template                  varchar(255),
   revision_id               bigint,
-  meta_info_id              bigint,
-  constraint pk_page primary key (id))
+  meta_id                   bigint,
+  constraint pk_pages primary key (id))
 ;
 
-create table page_meta_info (
-  id                        bigint not null,
-  summary                   varchar(255),
-  thumb_image               varchar(255),
-  meta_description          varchar(255),
-  meta_key_words            varchar(255),
-  page_id                   bigint,
-  constraint pk_page_meta_info primary key (id))
-;
-
-create table revision (
+create table pages_revisions (
   id                        bigint not null,
   page_id                   bigint,
   title                     varchar(255),
@@ -33,23 +34,31 @@ create table revision (
   content                   clob,
   create_date_time          timestamp not null,
   update_date_time          timestamp not null,
-  constraint pk_revision primary key (id))
+  constraint pk_pages_revisions primary key (id))
 ;
 
-create sequence page_seq;
+create table pages_tags (
+  id                        bigint not null,
+  tag                       varchar(255),
+  constraint pk_pages_tags primary key (id))
+;
 
-create sequence page_meta_info_seq;
+create sequence pages_meta_seq;
 
-create sequence revision_seq;
+create sequence pages_seq;
 
-alter table page add constraint fk_page_revision_1 foreign key (revision_id) references revision (id) on delete restrict on update restrict;
-create index ix_page_revision_1 on page (revision_id);
-alter table page add constraint fk_page_metaInfo_2 foreign key (meta_info_id) references page_meta_info (id) on delete restrict on update restrict;
-create index ix_page_metaInfo_2 on page (meta_info_id);
-alter table page_meta_info add constraint fk_page_meta_info_page_3 foreign key (page_id) references page (id) on delete restrict on update restrict;
-create index ix_page_meta_info_page_3 on page_meta_info (page_id);
-alter table revision add constraint fk_revision_page_4 foreign key (page_id) references page (id) on delete restrict on update restrict;
-create index ix_revision_page_4 on revision (page_id);
+create sequence pages_revisions_seq;
+
+create sequence pages_tags_seq;
+
+alter table pages_meta add constraint fk_pages_meta_page_1 foreign key (page_id) references pages (id) on delete restrict on update restrict;
+create index ix_pages_meta_page_1 on pages_meta (page_id);
+alter table pages add constraint fk_pages_revision_2 foreign key (revision_id) references pages_revisions (id) on delete restrict on update restrict;
+create index ix_pages_revision_2 on pages (revision_id);
+alter table pages add constraint fk_pages_meta_3 foreign key (meta_id) references pages_meta (id) on delete restrict on update restrict;
+create index ix_pages_meta_3 on pages (meta_id);
+alter table pages_revisions add constraint fk_pages_revisions_page_4 foreign key (page_id) references pages (id) on delete restrict on update restrict;
+create index ix_pages_revisions_page_4 on pages_revisions (page_id);
 
 
 
@@ -57,17 +66,21 @@ create index ix_revision_page_4 on revision (page_id);
 
 SET REFERENTIAL_INTEGRITY FALSE;
 
-drop table if exists page;
+drop table if exists pages_meta;
 
-drop table if exists page_meta_info;
+drop table if exists pages;
 
-drop table if exists revision;
+drop table if exists pages_revisions;
+
+drop table if exists pages_tags;
 
 SET REFERENTIAL_INTEGRITY TRUE;
 
-drop sequence if exists page_seq;
+drop sequence if exists pages_meta_seq;
 
-drop sequence if exists page_meta_info_seq;
+drop sequence if exists pages_seq;
 
-drop sequence if exists revision_seq;
+drop sequence if exists pages_revisions_seq;
+
+drop sequence if exists pages_tags_seq;
 

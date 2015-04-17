@@ -29,11 +29,13 @@ public class Page {
     public String description;
 
     public String keywords;
+    
+    public String category;
 
     @Override
     public String toString() {
-        return String.format("namespace: %s, key: %s, owner: %s, access: %s, state: %s, template: %s, revision: %d, src: %s, content: %s, summary: %s, thumb: %s, description: %s, keywords: %s",
-                namespace, key, owner, access.name(), state.name(), template, revision, source, content, summary, thumb, description, keywords);
+        return String.format("namespace: %s, key: %s, owner: %s, access: %s, state: %s, template: %s, revision: %d, src: %s, content: %s, summary: %s, thumb: %s, description: %s, keywords: %s, category: %s",
+                namespace, key, owner, access.name(), state.name(), template, revision, source, content, summary, thumb, description, keywords, category);
     }
 
 }
