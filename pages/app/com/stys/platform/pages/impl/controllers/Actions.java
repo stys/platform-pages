@@ -3,6 +3,7 @@ package com.stys.platform.pages.impl.controllers;
 import java.util.List;
 import java.util.Map;
 
+import com.stys.platform.pages.impl.domain.NamespaceKeyRevisionSelector;
 import play.Logger;
 import play.Play;
 import play.data.Form;
@@ -18,8 +19,6 @@ import com.stys.platform.pages.impl.view.ViewPlugin;
 
 public class Actions extends play.mvc.Controller {
 
-	public static F.None<Long> None = new F.None<>();
-	
     public static play.mvc.Result index() {
         return ok("Welcome to Platform Pages");
     }
@@ -33,10 +32,10 @@ public class Actions extends play.mvc.Controller {
     public static Result view(String namespace, String key) {
 
     	// Get show service from plugin
-        Service<ContentResult, Page> pages = Play.application().plugin(ViewPlugin.class).getPageService();
+        Service<ContentResult, NamespaceKeyRevisionSelector, Page> pages = Play.application().plugin(ViewPlugin.class).getPageService();
         
         // Retrieve a page
-        ContentResult result = pages.get(namespace, key, None);
+        ContentResult result = pages.get(new NamespaceKeyRevisionSelector(namespace, key));
 
         // Convert to play.mvc.Result
         return result.toPlayMvcResult();
@@ -69,10 +68,10 @@ public class Actions extends play.mvc.Controller {
     public static Result edit(String namespace, String key) {
 
         // Get show service
-    	Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPageService();
+    	Service<ContentResult, NamespaceKeyRevisionSelector, Page> pages = Play.application().plugin(EditPlugin.class).getPageService();
 
         // Get a requested page
-        ContentResult result = pages.get(namespace, key, None);
+        ContentResult result = pages.get(new NamespaceKeyRevisionSelector(namespace, key));
 
         // Convert to play.mvc.Result
         return result.toPlayMvcResult();
@@ -99,10 +98,10 @@ public class Actions extends play.mvc.Controller {
     	Page page = filled.get();
             	
         // Get pages edit service
-        Service<ContentResult, Page> pages = Play.application().plugin(EditPlugin.class).getPageService();
+        Service<ContentResult, NamespaceKeyRevisionSelector, Page> pages = Play.application().plugin(EditPlugin.class).getPageService();
 
   	    // Store as new revision
-    	ContentResult result = pages.put(page, page.namespace, page.key, None);
+    	ContentResult result = pages.put(new NamespaceKeyRevisionSelector(page.namespace, page.key), page);
 
         // If status Ok -> redirect to view 
     	if (result.getStatus().equals(com.stys.platform.pages.Result.Status.Ok)) {

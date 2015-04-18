@@ -2,6 +2,7 @@ package com.stys.platform.pages.impl.view;
 
 import java.lang.reflect.Constructor;
 
+import com.stys.platform.pages.impl.domain.NamespaceKeyRevisionSelector;
 import play.Application;
 import play.Logger;
 import play.twirl.api.Content;
@@ -32,7 +33,7 @@ public class DefaultViewPlugin extends ViewPlugin {
 	/*
 	 * Instance of show service
 	 */
-    private Service<ContentResult, Page> service;
+    private Service<ContentResult, NamespaceKeyRevisionSelector, Page> service;
 
     /**
      * Usual plugin constructor 
@@ -57,8 +58,8 @@ public class DefaultViewPlugin extends ViewPlugin {
         	Class<?> clazz = this.application.classloader().loadClass(name);
         	Constructor<?> constructor = clazz.getConstructor(Application.class, Service.class);
         	@SuppressWarnings("unchecked")
-			Service<Result<Page>, Page> repository = 
-				(Service<Result<Page>, Page>) constructor.newInstance(this.application, null);
+			Service<Result<Page>, NamespaceKeyRevisionSelector, Page> repository =
+				(Service<Result<Page>, NamespaceKeyRevisionSelector, Page>) constructor.newInstance(this.application, null);
         	
         	// Processor
         	name = this.application.configuration().getString(PROCESSOR_KEY);
@@ -66,8 +67,8 @@ public class DefaultViewPlugin extends ViewPlugin {
         	clazz = this.application.classloader().loadClass(name);
         	constructor = clazz.getConstructor(Application.class, Service.class);
         	@SuppressWarnings("unchecked")
-			Service<Result<Page>, Page> processor = 
-				(Service<Result<Page>, Page>) constructor.newInstance(this.application, repository);
+			Service<Result<Page>, NamespaceKeyRevisionSelector, Page> processor =
+				(Service<Result<Page>, NamespaceKeyRevisionSelector, Page>) constructor.newInstance(this.application, repository);
         	
         	// Access manager
         	name = this.application.configuration().getString(ACCESS_MANAGER_KEY);
@@ -75,8 +76,8 @@ public class DefaultViewPlugin extends ViewPlugin {
         	clazz = this.application.classloader().loadClass(name);
         	constructor = clazz.getConstructor(Application.class, Service.class);
         	@SuppressWarnings("unchecked")
-			Service<Result<Page>, Page> manager = 
-				(Service<Result<Page>, Page>) constructor.newInstance(this.application, processor);
+			Service<Result<Page>, NamespaceKeyRevisionSelector, Page> manager =
+				(Service<Result<Page>, NamespaceKeyRevisionSelector, Page>) constructor.newInstance(this.application, processor);
         	
         	// Template switcher
         	name = this.application.configuration().getString(TEMPLATE_SWITCHER_KEY);
@@ -84,8 +85,8 @@ public class DefaultViewPlugin extends ViewPlugin {
         	clazz = this.application.classloader().loadClass(name);
         	constructor = clazz.getConstructor(Application.class, Service.class);
         	@SuppressWarnings("unchecked")
-			Service<Result<Content>, Page> switcher = 
-				(Service<Result<Content>, Page>) constructor.newInstance(this.application, manager);
+			Service<Result<Content>, NamespaceKeyRevisionSelector, Page> switcher =
+				(Service<Result<Content>, NamespaceKeyRevisionSelector, Page>) constructor.newInstance(this.application, manager);
         	
         	// Assembly
         	this.service = new ContentResultAdapter(switcher);
@@ -100,7 +101,7 @@ public class DefaultViewPlugin extends ViewPlugin {
      * @see Plugin#getPageService()
      */
     @Override
-    public Service<ContentResult, Page> getPageService() {
+    public Service<ContentResult, NamespaceKeyRevisionSelector, Page> getPageService() {
         // Return an instance
     	return this.service;
     }

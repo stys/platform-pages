@@ -1,24 +1,21 @@
 package com.stys.platform.pages.impl.domain;
 
 import com.stys.platform.pages.Service;
-
-import play.libs.F;
 import play.twirl.api.Content;
-
 import com.stys.platform.pages.Result;
 
-public class ContentResultAdapter implements Service<ContentResult, Page> {
+public class ContentResultAdapter implements Service<ContentResult, NamespaceKeyRevisionSelector, Page> {
 
-	private Service<Result<Content>, Page> wrapped;
+	private Service<Result<Content>, NamespaceKeyRevisionSelector, Page> wrapped;
 
-	public ContentResultAdapter(Service<Result<Content>, Page> service) {
+	public ContentResultAdapter(Service<Result<Content>, NamespaceKeyRevisionSelector, Page> service) {
 		this.wrapped = service;
 	}
 
 	@Override
-	public ContentResult get(String namespace, String key, F.Option<Long> revision) {
+	public ContentResult get(NamespaceKeyRevisionSelector selector) {
 
-		final Result<Content> result = wrapped.get(namespace, key, revision);
+		final Result<Content> result = wrapped.get(selector);
 
 		return new ContentResult() {
 			@Override
@@ -34,9 +31,9 @@ public class ContentResultAdapter implements Service<ContentResult, Page> {
 	}
 
 	@Override
-	public ContentResult put(Page page, String namespace, String key, F.Option<Long> revision) {
+	public ContentResult put(NamespaceKeyRevisionSelector selector, Page page) {
 	
-		final Result<Content> result = wrapped.put(page, namespace, key, revision);
+		final Result<Content> result = wrapped.put(selector, page);
 
 		return new ContentResult() {
 			@Override

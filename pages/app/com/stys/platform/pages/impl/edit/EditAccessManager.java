@@ -11,7 +11,7 @@ import com.stys.platform.pages.Results;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.domain.*;
 
-public class EditAccessManager extends Results implements Service<Result<Page>, Page> {
+public class EditAccessManager extends Results implements Service<Result<Page>, NamespaceKeyRevisionSelector, Page> {
 
 	/**
 	 * User service configuration key
@@ -31,14 +31,14 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 	/**
 	 * Instance of deligate service
 	 */
-	private Service<Result<Page>, Page> delegate;
+	private Service<Result<Page>, NamespaceKeyRevisionSelector, Page> delegate;
 	
 	/**
 	 * Constructor
 	 * @param application - injected instance of application
 	 * @param delegate - injected instance of delegate service
 	 */
-	public EditAccessManager(Application application, Service<Result<Page>, Page> delegate) {
+	public EditAccessManager(Application application, Service<Result<Page>, NamespaceKeyRevisionSelector, Page> delegate) {
 		
 		// Store references
 		this.application = application;
@@ -63,13 +63,13 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 	}
 	
 	@Override
-	public Result<Page> get(String namespace, String key, Option<Long> revision) {
+	public Result<Page> get(NamespaceKeyRevisionSelector selector) {
 		
 		// Default result
 		Result<Page> result = BadRequest(null);
 		
 		// Get page from delegate service
-		Result<Page> previous = this.delegate.get(namespace, key, revision);
+		Result<Page> previous = this.delegate.get(selector);
 		
 		// If page not found - creating a new one
 		boolean isCreating = previous.getStatus().equals(Result.Status.NotFound);
@@ -152,13 +152,13 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 	}
 
 	@Override
-	public Result<Page> put(Page page, String namespace, String key, Option<Long> revision) {
+	public Result<Page> put(NamespaceKeyRevisionSelector selector, Page page) {
 		
 		// Default result
 		Result<Page> result = BadRequest(null);
 		
 		// Get page from delegate service
-		Result<Page> previous = this.delegate.get(namespace, key, revision);
+		Result<Page> previous = this.delegate.get(selector);
 		
 		// If page not found - creating a new one
 		boolean isCreating = previous.getStatus().equals(Result.Status.NotFound);
@@ -213,7 +213,7 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 			// Registered users can edit published open pages and create new open pages
 			if( (isPublished && isOpen) || (isCreating && isOpen) ) {
 				// Make sure user did not change access level
-				if (page.access.equals(Access.Open)) return this.delegate.put(page, namespace, key, revision);
+				if (page.access.equals(Access.Open)) return this.delegate.put(selector, page);
 				else result = Forbidden(null);
 			} 
 			else result = Forbidden(null);
@@ -225,22 +225,22 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 			if ( !isPrivate ) {
 				// Make sure moderator did not set page to private
 				if ( page.access.equals(Access.Private) ) result = Forbidden(null);
-				else return this.delegate.put(page, namespace, key, revision);
+				else return this.delegate.put(selector, page);
 			} else if (isCreating) {
-				return this.delegate.put(page, namespace, key, revision);
+				return this.delegate.put(selector, page);
 			}
 		}
 		
 		// Administrator
 		if (isAdministrator) {
 			// Administrator can edit always
-			return this.delegate.put(page, namespace, key, revision);
+			return this.delegate.put(selector, page);
 		}
 		
 		// Owner
 		if (isOwner) {
 			// Owner can edit
-			return this.delegate.put(page, namespace, key, revision);
+			return this.delegate.put(selector, page);
 		}
 		
 		// Return final result

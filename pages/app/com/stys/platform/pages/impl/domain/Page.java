@@ -1,5 +1,7 @@
 package com.stys.platform.pages.impl.domain;
 
+import org.joda.time.DateTime;
+
 public class Page {
 
     public String namespace;
@@ -31,6 +33,10 @@ public class Page {
     public String keywords;
     
     public String category;
+    
+    public DateTime published;
+    
+    public DateTime edited;
 
     @Override
     public String toString() {

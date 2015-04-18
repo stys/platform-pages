@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
+import com.stys.platform.pages.impl.domain.NamespaceKeyRevisionSelector;
 import com.typesafe.config.Config;
 import org.markdown4j.Markdown4jProcessor;
 
@@ -21,13 +22,13 @@ import com.stys.platform.pages.impl.domain.Page;
  * Markdown processor for pages pipeline. Uses markdown4j internally.
  * Allows to read markdown4j plugins from Play configuration.
  */
-public class MarkdownProcessor implements Service<Result<Page>, Page> {
+public class MarkdownProcessor<S> implements Service<Result<Page>, S, Page> {
 	
     /** Configuration key to map of markdown4j plugins */
     private static String MARKDOWN4J_PLUGINS_CONFIGURATION_KEY = "com.stys.platform.pages.markdown4j.plugins";
     
 	/** Instance of delegate service */
-	private Service<Result<Page>, Page> delegate;
+	private Service<Result<Page>, S, Page> delegate;
 
 	/** Instance of application */
 	@SuppressWarnings("unused")
@@ -41,7 +42,7 @@ public class MarkdownProcessor implements Service<Result<Page>, Page> {
 	 * @param application Instance of Play application
 	 * @param delegate Instance of delegate pages service
 	 */
-	public MarkdownProcessor(Application application, Service<Result<Page>, Page> delegate) {
+	public MarkdownProcessor(Application application, Service<Result<Page>, S, Page> delegate) {
 		
         this.application = application;
 		this.delegate = delegate;
@@ -70,8 +71,8 @@ public class MarkdownProcessor implements Service<Result<Page>, Page> {
      * {@inheritDoc}
      */
 	@Override
-	public Result<Page> get(String namespace, String key, Option<Long> revision) {
-		return this.delegate.get(namespace, key, revision);
+	public Result<Page> get(S selector) {
+		return this.delegate.get(selector);
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class MarkdownProcessor implements Service<Result<Page>, Page> {
      * Converts markdown to HTML before persisting.
 	 */
 	@Override
-	public Result<Page> put(Page page, String namespace, String key, Option<Long> revision) {
+	public Result<Page> put(S selector, Page page) {
 		// Convert markdown to html
 		try {
 			page.content = this.processor.process(page.source);
@@ -87,7 +88,7 @@ public class MarkdownProcessor implements Service<Result<Page>, Page> {
 			throw new RuntimeException(ex);
 		}
 		// Delegate
-		return this.delegate.put(page, namespace, key, revision);
+		return this.delegate.put(selector, page);
 	}
 	
 }

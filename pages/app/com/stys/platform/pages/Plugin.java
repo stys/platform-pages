@@ -6,12 +6,12 @@ package com.stys.platform.pages;
  * Play application and lookup them from Play plugins registry 
  * by plugin class name.
  */
-public abstract class Plugin<R, T> extends play.Plugin {
+public abstract class Plugin<R, S, T> extends play.Plugin {
 
 	/**
 	 * Returns an instance of page service
 	 * @return
 	 */
-    public abstract Service<R, T> getPageService();
+    public abstract Service<R, S, T> getPageService();
 
 }

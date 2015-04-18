@@ -17,7 +17,7 @@ import com.stys.platform.pages.impl.domain.Template;
 /**
  * Render page: show editor or corresponding error
  */
-public class ViewTemplateSwitcher extends Results implements Service<Result<Content>, Page> {
+public class ViewTemplateSwitcher<S> extends Results implements Service<Result<Content>, S, Page> {
 
 	private static final String TEMPLATES_KEY = "com.stys.platform.pages.templates";
 	private static final String BAD_REQUEST_KEY = "com.stys.platform.pages.bad_request";
@@ -25,7 +25,7 @@ public class ViewTemplateSwitcher extends Results implements Service<Result<Cont
 	private static final String FORBIDDEN_KEY = "com.stys.platform.pages.forbidden";
 	private static final String NOT_FOUND_KEY = "com.stys.platform.pages.not_found";
 	
-	private Service<Result<Page>, Page> delegate;
+	private Service<Result<Page>, S, Page> delegate;
 	
 	@SuppressWarnings("unused")
 	private Application application;
@@ -34,7 +34,7 @@ public class ViewTemplateSwitcher extends Results implements Service<Result<Cont
 	
 	private Map<Result.Status, Template> errors;
 
-	public ViewTemplateSwitcher(Application application, Service<Result<Page>, Page> delegate) {
+	public ViewTemplateSwitcher(Application application, Service<Result<Page>, S, Page> delegate) {
 	
 		// Store references
 		this.delegate = delegate;
@@ -49,10 +49,10 @@ public class ViewTemplateSwitcher extends Results implements Service<Result<Cont
 	}
 	
 	@Override
-	public Result<Content> get(String namespace, String key, Option<Long> revision) {
+	public Result<Content> get(S selector) {
 	
 		// Retrieve page to edit
-		final Result<Page> result = this.delegate.get(namespace, key, revision);
+		final Result<Page> result = this.delegate.get(selector);
 	
 		// Ok
 		if( result.getStatus().equals(Result.Status.Ok)) {
@@ -82,10 +82,10 @@ public class ViewTemplateSwitcher extends Results implements Service<Result<Cont
 	}
 
 	@Override
-	public Result<Content> put(Page page, String namespace, String key, Option<Long> revision) {
+	public Result<Content> put(S selector, Page page) {
 		
 		// Delegate put
-		final Result<Page> result = delegate.put(page, namespace, key, revision);		
+		final Result<Page> result = delegate.put(selector, page);
 	
 		// Ok
 		if( result.getStatus().equals(Result.Status.Ok)) {

@@ -23,14 +23,12 @@ public class PageEntity extends Model {
     @Column(name = "key_")
     public String key;
 
-    @Column(name = "access_")
-    public String access;
+    @OneToOne
+    public AccessEntity access;
+    
+    @OneToOne
+    public StateEntity state;
 
-    @Column(name = "state_")
-    public String state;
-    
-    public String template;
-    
     @OneToOne
     public RevisionEntity revision;
     

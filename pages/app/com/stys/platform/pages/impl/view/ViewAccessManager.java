@@ -1,6 +1,7 @@
 package com.stys.platform.pages.impl.view;
 
 import java.lang.reflect.Constructor;
+import java.nio.channels.SelectableChannel;
 
 import play.Application;
 import play.Logger;
@@ -11,7 +12,7 @@ import com.stys.platform.pages.Results;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.domain.*;
 
-public class ViewAccessManager extends Results implements Service<Result<Page>, Page> {
+public class ViewAccessManager<S> extends Results implements Service<Result<Page>, S, Page> {
 
 	/**
 	 * User service configuration key
@@ -31,14 +32,14 @@ public class ViewAccessManager extends Results implements Service<Result<Page>, 
 	/**
 	 * Instance of deligate service
 	 */
-	private Service<Result<Page>, Page> delegate;
+	private Service<Result<Page>, S, Page> delegate;
 	
 	/**
 	 * Constructor
 	 * @param application - injected instance of application
 	 * @param delegate - injected instance of delegate service
 	 */
-	public ViewAccessManager(Application application, Service<Result<Page>, Page> delegate) {
+	public ViewAccessManager(Application application, Service<Result<Page>, S, Page> delegate) {
 		
 		// Store references
 		this.application = application;
@@ -64,13 +65,13 @@ public class ViewAccessManager extends Results implements Service<Result<Page>, 
 	}
 	
 	@Override
-	public Result<Page> get(String namespace, String key, Option<Long> revision) {
+	public Result<Page> get(S selector) {
 		
 		// Default result
 		Result<Page> result = BadRequest(null);
 		
 		// Get page from delegate service
-		Result<Page> previous = this.delegate.get(namespace, key, revision);
+		Result<Page> previous = this.delegate.get(selector);
 		
 		// If page not found - continue 
 		if( previous.getStatus().equals(Result.Status.NotFound) ) {
@@ -147,7 +148,7 @@ public class ViewAccessManager extends Results implements Service<Result<Page>, 
 	}
 
 	@Override
-	public Result<Page> put(Page page, String namespace, String key, Option<Long> revision) {
+	public Result<Page> put(S selector, Page page) {
 					
 		// Default return bad request: view service doesn't allow put!
 		return BadRequest(null);		

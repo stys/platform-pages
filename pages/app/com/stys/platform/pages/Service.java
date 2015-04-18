@@ -4,28 +4,17 @@ import play.libs.F;
 
 /**
  * Generic pages service.
- * @param <R> Data type returned by service
- * @param <T> Data type consumed by service
  */
-public interface Service<R, T> {
+public interface Service<R, S, D> {
 
 	/**
-	 * Get page by namespace, key and optional revision
-	 * @param namespace - namespace of requested page
-	 * @param key - key of requested page
-	 * @param revision - optional revision id of requested page
-	 * @return - page rendered with template service
+	 * Get result by selector
 	 */
-	public R get(String namespace, String key, F.Option<Long> revision);
+	public R get(S selector);
 
 	/**
-	 * Put page by namespace, key and optional revision
-	 * @param page
-	 * @param namespace
-	 * @param key
-	 * @param revision
-	 * @return
+	 * Put data by selector
 	 */
-	public R put(T page, String namespace, String key, F.Option<Long> revision);
+	public R put(S selector, D data);
 
 }
