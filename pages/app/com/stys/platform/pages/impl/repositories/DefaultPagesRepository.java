@@ -1,9 +1,9 @@
 package com.stys.platform.pages.impl.repositories;
 
-import com.stys.platform.pages.impl.domain.NamespaceKeyRevisionSelector;
+import com.stys.platform.pages.impl.domain.Selector;
 import com.stys.platform.pages.impl.models.*;
+import org.joda.time.DateTime;
 import play.Application;
-import play.libs.F;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.TxRunnable;
@@ -19,12 +19,12 @@ import java.sql.Timestamp;
 /**
  * Implementation of repository
  */
-public class PagesRepository extends Results implements Service<Result<Page>, NamespaceKeyRevisionSelector, Page> {
+public class DefaultPagesRepository extends Results implements Service<Result<Page>, Selector, Page> {
 
 	/**
 	 * Constructs new instance
 	 */
-	public PagesRepository(Application application, Service<Result<Page>, NamespaceKeyRevisionSelector, Page> delegate) {
+	public DefaultPagesRepository(Application application, Service<Result<Page>, Selector, Page> delegate) {
 		/* Empty */
 	}
 	
@@ -32,7 +32,7 @@ public class PagesRepository extends Results implements Service<Result<Page>, Na
 	 * Creates a new revision, when called without a specific revision.
 	 */
 	@Override
-    public Result<Page> put(NamespaceKeyRevisionSelector selector, Page page) {
+    public Result<Page> put(Selector selector, Page page) {
 		
         // Fix namespace and key just to make sure
         page.namespace = selector.namespace;
@@ -58,7 +58,7 @@ public class PagesRepository extends Results implements Service<Result<Page>, Na
 	 * Returns a page DTO
 	 */
     @Override
-    public Result<Page> get(NamespaceKeyRevisionSelector selector) {
+    public Result<Page> get(Selector selector) {
 
 		// Lookup the page, join dependent entities
 		PageEntity page_ = PageEntity.find
@@ -122,7 +122,9 @@ public class PagesRepository extends Results implements Service<Result<Page>, Na
 		page_.description = meta.description;
 		page_.keywords = meta.keywords;
 		page_.category = meta.category;
-		
+		page_.published = new DateTime(meta.published);
+        page_.edited = new DateTime(meta.edited);
+        
         page_.revision = revision.id;
 		page_.title = revision.title;
 		page_.source = revision.source;

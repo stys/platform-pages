@@ -20,11 +20,7 @@ public class Editor implements Template {
 		List<String> templates = Arrays.asList("a", "b");
 		
 		// Category options
-		List<String> category = Arrays.asList("Новости CubicPrints", 
-											  "Интервью CubicPrints",
-											  "События CubicPrints",
-											  "Конкурсы CubicPrints",
-											  "3D-печать в мире");
+		List<String> category = Arrays.asList("story", "bio");
 		
 		// State options
 		List<State> states = new ArrayList<>();
@@ -40,6 +36,7 @@ public class Editor implements Template {
 		
 		// render editor with page content
 		return views.html.editor.render(page, templates, category, states, access);
+        
 	}
 	
 }

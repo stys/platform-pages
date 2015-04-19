@@ -1,4 +1,4 @@
-package com.stys.platform.pages.impl.markdown.plugins;
+package com.stys.platform.pages.impl.markdown4j.plugins;
 
 import org.markdown4j.Plugin;
 

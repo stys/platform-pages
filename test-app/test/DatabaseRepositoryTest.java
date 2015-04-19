@@ -1,23 +1,21 @@
-import static org.junit.Assert.*;
-import static play.test.Helpers.*;
+import com.stys.platform.pages.Result;
+import com.stys.platform.pages.Service;
+import com.stys.platform.pages.impl.domain.Access;
+import com.stys.platform.pages.impl.domain.Page;
+import com.stys.platform.pages.impl.domain.Selector;
+import com.stys.platform.pages.impl.domain.State;
+import com.stys.platform.pages.impl.repositories.DefaultPagesRepository;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import global.Global;
+import org.junit.Before;
+import org.junit.Test;
+import play.Configuration;
 
 import java.io.File;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import play.Configuration;
-import play.libs.F;
-
-import com.stys.platform.pages.Result;
-import com.stys.platform.pages.Service;
-import com.stys.platform.pages.impl.repository.Repository;
-import com.stys.platform.pages.impl.domain.Access;
-import com.stys.platform.pages.impl.domain.Page;
-import com.stys.platform.pages.impl.domain.State;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+import static org.junit.Assert.assertEquals;
+import static play.test.Helpers.*;
 
 public class DatabaseRepositoryTest {
 	
@@ -53,8 +51,8 @@ public class DatabaseRepositoryTest {
 			public void run() {
 							
 				// Create a repository service
-				Service<Result<Page>, Page> repository = 
-						new Repository(null, null);
+				Service<Result<Page>, Selector, Page> repository =
+						new DefaultPagesRepository(null, null);
 				
 				// Prepare a test page
 				Page page = new Page();
@@ -74,7 +72,7 @@ public class DatabaseRepositoryTest {
 				page.keywords = "Printer";
 				
 	            // Put
-	            repository.put(page, page.namespace, page.key, new F.None<Long>());
+	            repository.put(new Selector(page.namespace, page.key), page);
 				
 	            // Get line count
 	            int page_count = com.stys.platform.pages.impl.models.PageEntity.find.findRowCount();

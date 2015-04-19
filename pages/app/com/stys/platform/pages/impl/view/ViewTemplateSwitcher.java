@@ -4,8 +4,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.stys.platform.pages.impl.domain.Selector;
 import play.Application;
-import play.libs.F.Option;
 import play.twirl.api.Content;
 
 import com.stys.platform.pages.Result;
@@ -17,7 +17,7 @@ import com.stys.platform.pages.impl.domain.Template;
 /**
  * Render page: show editor or corresponding error
  */
-public class ViewTemplateSwitcher<S> extends Results implements Service<Result<Content>, S, Page> {
+public class ViewTemplateSwitcher extends Results implements Service<Result<Content>, Selector, Page> {
 
 	private static final String TEMPLATES_KEY = "com.stys.platform.pages.templates";
 	private static final String BAD_REQUEST_KEY = "com.stys.platform.pages.bad_request";
@@ -25,7 +25,7 @@ public class ViewTemplateSwitcher<S> extends Results implements Service<Result<C
 	private static final String FORBIDDEN_KEY = "com.stys.platform.pages.forbidden";
 	private static final String NOT_FOUND_KEY = "com.stys.platform.pages.not_found";
 	
-	private Service<Result<Page>, S, Page> delegate;
+	private Service<Result<Page>, Selector, Page> delegate;
 	
 	@SuppressWarnings("unused")
 	private Application application;
@@ -34,7 +34,7 @@ public class ViewTemplateSwitcher<S> extends Results implements Service<Result<C
 	
 	private Map<Result.Status, Template> errors;
 
-	public ViewTemplateSwitcher(Application application, Service<Result<Page>, S, Page> delegate) {
+	public ViewTemplateSwitcher(Application application, Service<Result<Page>, Selector, Page> delegate) {
 	
 		// Store references
 		this.delegate = delegate;
@@ -49,7 +49,7 @@ public class ViewTemplateSwitcher<S> extends Results implements Service<Result<C
 	}
 	
 	@Override
-	public Result<Content> get(S selector) {
+	public Result<Content> get(Selector selector) {
 	
 		// Retrieve page to edit
 		final Result<Page> result = this.delegate.get(selector);
@@ -82,37 +82,9 @@ public class ViewTemplateSwitcher<S> extends Results implements Service<Result<C
 	}
 
 	@Override
-	public Result<Content> put(S selector, Page page) {
-		
-		// Delegate put
-		final Result<Page> result = delegate.put(selector, page);
-	
-		// Ok
-		if( result.getStatus().equals(Result.Status.Ok)) {
-			// Get template
-			Template template = templates.get(result.getContent().template);
-			// Default template			
-			if (null == template) {
-				Content content = new Content() {
-					@Override
-					public String body() {
-						return result.getContent().content;
-					}
-
-					@Override
-					public String contentType() {
-						return "text/plain";
-					}
-				};
-				return Ok(content);
-			} else {
-				return Ok(template.render(result.getContent()));
-			}
-		}
-		
-		// Process errors
-		return map(result, errors.get(result.getStatus()).render(result.getContent()));
-		
+	public Result<Content> put(Selector selector, Page page) {
+		// Not allowed
+        throw new UnsupportedOperationException("ViewTemplate switcher does not support put operation");
 	}
 
 	private static Map<String, Template> loadTemplates(Application application) {

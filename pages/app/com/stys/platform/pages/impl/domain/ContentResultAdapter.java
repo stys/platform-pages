@@ -4,16 +4,16 @@ import com.stys.platform.pages.Service;
 import play.twirl.api.Content;
 import com.stys.platform.pages.Result;
 
-public class ContentResultAdapter implements Service<ContentResult, NamespaceKeyRevisionSelector, Page> {
+public class ContentResultAdapter implements Service<ContentResult, Selector, Page> {
 
-	private Service<Result<Content>, NamespaceKeyRevisionSelector, Page> wrapped;
+	private Service<Result<Content>, Selector, Page> wrapped;
 
-	public ContentResultAdapter(Service<Result<Content>, NamespaceKeyRevisionSelector, Page> service) {
+	public ContentResultAdapter(Service<Result<Content>, Selector, Page> service) {
 		this.wrapped = service;
 	}
 
 	@Override
-	public ContentResult get(NamespaceKeyRevisionSelector selector) {
+	public ContentResult get(Selector selector) {
 
 		final Result<Content> result = wrapped.get(selector);
 
@@ -31,7 +31,7 @@ public class ContentResultAdapter implements Service<ContentResult, NamespaceKey
 	}
 
 	@Override
-	public ContentResult put(NamespaceKeyRevisionSelector selector, Page page) {
+	public ContentResult put(Selector selector, Page page) {
 	
 		final Result<Content> result = wrapped.put(selector, page);
 

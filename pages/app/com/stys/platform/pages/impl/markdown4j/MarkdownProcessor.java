@@ -1,34 +1,28 @@
-package com.stys.platform.pages.impl.markdown;
+package com.stys.platform.pages.impl.markdown4j;
+
+import com.stys.platform.pages.Service;
+import com.stys.platform.pages.impl.domain.Page;
+import org.markdown4j.Markdown4jProcessor;
+import org.markdown4j.Plugin;
+import play.Application;
+import play.Configuration;
+import play.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-import com.stys.platform.pages.impl.domain.NamespaceKeyRevisionSelector;
-import com.typesafe.config.Config;
-import org.markdown4j.Markdown4jProcessor;
-
-import org.markdown4j.Plugin;
-import play.Application;
-import play.Configuration;
-import play.Logger;
-import play.libs.F.Option;
-
-import com.stys.platform.pages.Result;
-import com.stys.platform.pages.Service;
-import com.stys.platform.pages.impl.domain.Page;
-
 /**
  * Markdown processor for pages pipeline. Uses markdown4j internally.
  * Allows to read markdown4j plugins from Play configuration.
  */
-public class MarkdownProcessor<S> implements Service<Result<Page>, S, Page> {
+public class MarkdownProcessor<R, S> implements Service<R, S, Page> {
 	
     /** Configuration key to map of markdown4j plugins */
     private static String MARKDOWN4J_PLUGINS_CONFIGURATION_KEY = "com.stys.platform.pages.markdown4j.plugins";
     
 	/** Instance of delegate service */
-	private Service<Result<Page>, S, Page> delegate;
+	private Service<R, S, Page> delegate;
 
 	/** Instance of application */
 	@SuppressWarnings("unused")
@@ -42,7 +36,7 @@ public class MarkdownProcessor<S> implements Service<Result<Page>, S, Page> {
 	 * @param application Instance of Play application
 	 * @param delegate Instance of delegate pages service
 	 */
-	public MarkdownProcessor(Application application, Service<Result<Page>, S, Page> delegate) {
+	public MarkdownProcessor(Application application, Service<R, S, Page> delegate) {
 		
         this.application = application;
 		this.delegate = delegate;
@@ -71,7 +65,7 @@ public class MarkdownProcessor<S> implements Service<Result<Page>, S, Page> {
      * {@inheritDoc}
      */
 	@Override
-	public Result<Page> get(S selector) {
+	public R get(S selector) {
 		return this.delegate.get(selector);
 	}
 
@@ -80,7 +74,7 @@ public class MarkdownProcessor<S> implements Service<Result<Page>, S, Page> {
      * Converts markdown to HTML before persisting.
 	 */
 	@Override
-	public Result<Page> put(S selector, Page page) {
+	public R put(S selector, Page page) {
 		// Convert markdown to html
 		try {
 			page.content = this.processor.process(page.source);

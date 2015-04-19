@@ -4,14 +4,13 @@ import java.lang.reflect.Constructor;
 
 import play.Application;
 import play.Logger;
-import play.libs.F.Option;
 
 import com.stys.platform.pages.Result;
 import com.stys.platform.pages.Results;
 import com.stys.platform.pages.Service;
 import com.stys.platform.pages.impl.domain.*;
 
-public class EditAccessManager extends Results implements Service<Result<Page>, NamespaceKeyRevisionSelector, Page> {
+public class EditAccessManager extends Results implements Service<Result<Page>, Selector, Page> {
 
 	/**
 	 * User service configuration key
@@ -31,14 +30,14 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 	/**
 	 * Instance of deligate service
 	 */
-	private Service<Result<Page>, NamespaceKeyRevisionSelector, Page> delegate;
+	private Service<Result<Page>, Selector, Page> delegate;
 	
 	/**
 	 * Constructor
 	 * @param application - injected instance of application
 	 * @param delegate - injected instance of delegate service
 	 */
-	public EditAccessManager(Application application, Service<Result<Page>, NamespaceKeyRevisionSelector, Page> delegate) {
+	public EditAccessManager(Application application, Service<Result<Page>, Selector, Page> delegate) {
 		
 		// Store references
 		this.application = application;
@@ -63,7 +62,7 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 	}
 	
 	@Override
-	public Result<Page> get(NamespaceKeyRevisionSelector selector) {
+	public Result<Page> get(Selector selector) {
 		
 		// Default result
 		Result<Page> result = BadRequest(null);
@@ -152,7 +151,7 @@ public class EditAccessManager extends Results implements Service<Result<Page>, 
 	}
 
 	@Override
-	public Result<Page> put(NamespaceKeyRevisionSelector selector, Page page) {
+	public Result<Page> put(Selector selector, Page page) {
 		
 		// Default result
 		Result<Page> result = BadRequest(null);

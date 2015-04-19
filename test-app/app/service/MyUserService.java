@@ -23,7 +23,7 @@ public class MyUserService extends Controller implements UserService {
 
 			@Override
 			public List<Role> getRoles() {
-				return Arrays.asList(Role.Moderator);
+				return Arrays.asList(Role.Administrator);
 			}
 
 			@Override

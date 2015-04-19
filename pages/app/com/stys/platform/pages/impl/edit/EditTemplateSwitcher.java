@@ -4,9 +4,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stys.platform.pages.impl.domain.NamespaceKeyRevisionSelector;
+import com.stys.platform.pages.impl.domain.Selector;
 import play.Application;
-import play.libs.F.Option;
 import play.twirl.api.Content;
 
 import com.stys.platform.pages.Result;
@@ -18,7 +17,7 @@ import com.stys.platform.pages.impl.domain.Template;
 /**
  * Render page: show editor or corresponding error
  */
-public class EditTemplateSwitcher extends Results implements Service<Result<Content>, NamespaceKeyRevisionSelector, Page> {
+public class EditTemplateSwitcher extends Results implements Service<Result<Content>, Selector, Page> {
 
 	private static final String EDITOR_KEY = "com.stys.platform.pages.editor";
 	private static final String BAD_REQUEST_KEY = "com.stys.platform.pages.bad_request";
@@ -26,14 +25,14 @@ public class EditTemplateSwitcher extends Results implements Service<Result<Cont
 	private static final String FORBIDDEN_KEY = "com.stys.platform.pages.forbidden";
 	private static final String NOT_FOUND_KEY = "com.stys.platform.pages.not_found";
 	
-	private Service<Result<Page>, NamespaceKeyRevisionSelector, Page> delegate;
+	private Service<Result<Page>, Selector, Page> delegate;
 	
 	@SuppressWarnings("unused")
 	private Application application;
 	
 	private Map<Result.Status, Template> templates;
 
-	public EditTemplateSwitcher(Application application, Service<Result<Page>, NamespaceKeyRevisionSelector, Page> delegate) {
+	public EditTemplateSwitcher(Application application, Service<Result<Page>, Selector, Page> delegate) {
 	
 		// Store references
 		this.delegate = delegate;
@@ -44,7 +43,7 @@ public class EditTemplateSwitcher extends Results implements Service<Result<Cont
 	}
 	
 	@Override
-	public Result<Content> get(NamespaceKeyRevisionSelector selector) {
+	public Result<Content> get(Selector selector) {
 	
 		// Retrieve page to edit
 		Result<Page> result = this.delegate.get(selector);
@@ -54,7 +53,7 @@ public class EditTemplateSwitcher extends Results implements Service<Result<Cont
 	}
 
 	@Override
-	public Result<Content> put(NamespaceKeyRevisionSelector selector, Page page) {
+	public Result<Content> put(Selector selector, Page page) {
 		
 		// Delegate put
 		Result<Page> result = delegate.put(selector, page);

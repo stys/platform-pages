@@ -5,7 +5,7 @@ import play.libs.F;
 /**
  * Selector by namespace, key and optional revision
  */
-public class NamespaceKeyRevisionSelector {
+public class Selector {
     
     public String namespace;
     
@@ -13,13 +13,13 @@ public class NamespaceKeyRevisionSelector {
     
     public F.Option<Long> revision;
     
-    public NamespaceKeyRevisionSelector(String namespace, String key) {
+    public Selector(String namespace, String key) {
         this.namespace = namespace;
         this.key = key;
         this.revision = new F.None<>();
     }
     
-    public NamespaceKeyRevisionSelector(String namespace, String key, Long revision) {
+    public Selector(String namespace, String key, Long revision) {
         this.namespace = namespace;
         this.key = key;
         this.revision = F.Some(revision);
