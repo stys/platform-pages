@@ -46,8 +46,6 @@ public class RevisionEntity extends Model {
     @ManyToOne
     public PageEntity page;
 
-    public String title;
-
     @Lob
     public String source;
 

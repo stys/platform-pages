@@ -19,11 +19,13 @@ public class MetaEntity extends Model{
 	@Id
     public Long id;
 	
+    public String title;
+    
     @Lob
 	public String summary;
 	
 	public String thumb;
-	
+	        
     @Lob
 	public String description;
 	

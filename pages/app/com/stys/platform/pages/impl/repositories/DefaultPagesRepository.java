@@ -115,7 +115,8 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
     	Page page_ = new Page();
         page_.namespace = page.namespace;
 		page_.key = page.key;
-				
+
+        page_.title = meta.title;
         page_.template = meta.template;
 		page_.summary = meta.summary;
 		page_.thumb = meta.thumb;
@@ -126,7 +127,6 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         page_.edited = new DateTime(meta.edited);
         
         page_.revision = revision.id;
-		page_.title = revision.title;
 		page_.source = revision.source;
 		page_.content = revision.content;
 
@@ -148,6 +148,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
 
         final MetaEntity meta_ = new MetaEntity();
         meta_.page = page_;
+        meta_.title = page.title;
         meta_.template = page.template;
         meta_.summary = page.summary;
         meta_.thumb = page.thumb;
@@ -157,7 +158,6 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
                 
         final RevisionEntity revision_ = new RevisionEntity();
         revision_.page = page_;
-        revision_.title = page.title;
         revision_.source = page.source;
         revision_.content = page.content;
         
@@ -199,6 +199,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         
         // Update meta information
         final MetaEntity meta_ = page_.meta;
+        meta_.title = page.title;
         meta_.template = page.template;
         meta_.summary = page.summary;
         meta_.thumb = page.thumb;
@@ -209,12 +210,9 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         // Update revision 
         RevisionEntity revision_ = page_.revision;
         // Create new revision if something changed
-        if (!revision_.title.equals(page.title) || 
-                !revision_.source.equals(page.source) || 
-                !revision_.content.equals(page.content)) {
+        if ( !revision_.source.equals(page.source) || !revision_.content.equals(page.content) ) {
             revision_ = new RevisionEntity();
             revision_.page = page_;
-            revision_.title = page.title;
             revision_.source = page.source;
             revision_.content = page.content;
             page_.revision = revision_;
