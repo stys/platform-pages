@@ -13,10 +13,11 @@ create table pages_access (
 
 create table pages_meta (
   id                        bigint not null,
-  summary                   varchar(255),
+  title                     varchar(255),
+  summary                   clob,
   thumb                     varchar(255),
-  description               varchar(255),
-  keywords                  varchar(255),
+  description               clob,
+  keywords                  clob,
   category                  varchar(255),
   template                  varchar(255),
   published                 timestamp,
@@ -39,7 +40,6 @@ create table pages (
 create table pages_revisions (
   id                        bigint not null,
   page_id                   bigint,
-  title                     varchar(255),
   source                    clob,
   content                   clob,
   create_date_time          timestamp not null,
@@ -51,6 +51,7 @@ create table pages_state (
   id                        bigint not null,
   state_                    varchar(255),
   page_id                   bigint,
+  create_date_time          timestamp not null,
   constraint pk_pages_state primary key (id))
 ;
 
