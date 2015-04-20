@@ -24,6 +24,9 @@ public class StateEntity extends Model {
     @ManyToOne
     public PageEntity page;
 
+    @CreatedTimestamp
+    public Timestamp createDateTime;
+    
     public static final Model.Finder<Long, StateEntity> find = new Model.Finder<>(Long.class, StateEntity.class);
 
 

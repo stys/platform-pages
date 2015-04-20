@@ -1,9 +1,6 @@
 package com.stys.platform.pages.impl.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import play.db.ebean.Model;
 
@@ -22,12 +19,15 @@ public class MetaEntity extends Model{
 	@Id
     public Long id;
 	
+    @Lob
 	public String summary;
 	
 	public String thumb;
 	
+    @Lob
 	public String description;
 	
+    @Lob
 	public String keywords;
     
     public String category;
