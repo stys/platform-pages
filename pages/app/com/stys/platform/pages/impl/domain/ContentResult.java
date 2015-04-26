@@ -11,6 +11,8 @@ public abstract class ContentResult implements Result<Content> {
         switch (this.getStatus()) {
             case Ok:
                 return Results.ok(this.getContent());
+            case BadRequest:
+                return Results.badRequest(this.getContent());
             case NotFound:
                 return Results.notFound(this.getContent());
             case Unauthorized:
