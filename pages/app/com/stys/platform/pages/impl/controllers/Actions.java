@@ -19,10 +19,6 @@ import com.stys.platform.pages.impl.view.ViewPlugin;
 
 public class Actions extends play.mvc.Controller {
 
-    public static play.mvc.Result index() {
-        return ok("Welcome to Platform Pages");
-    }
-
     /**
      * Display a page by namespace and key
      * @param namespace
@@ -69,7 +65,7 @@ public class Actions extends play.mvc.Controller {
      * Save form data
      * @return
      */
-    public static Result update(String namespace, String key) {
+    public static Result update() {
 
         // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
@@ -82,7 +78,7 @@ public class Actions extends play.mvc.Controller {
         }
     	
     	// Get binded page data
-    	Page page = filled.get();
+    	final Page page = filled.get();
             	
         // Get pages edit service
         Service<ContentResult, Selector, Page> pages = Play.application().plugin(EditPlugin.class).getPageService();
@@ -92,10 +88,12 @@ public class Actions extends play.mvc.Controller {
 
         // If status Ok -> redirect to view 
     	if (result.getStatus().equals(com.stys.platform.pages.Result.Status.Ok)) {
-    		return redirect(new Call() {
+    		final String namespace = page.namespace;
+            final String key = page.key;
+            return redirect(new Call() {
                 @Override
                 public String url() {
-                    return request().uri();
+                    return request().uri() + String.format("/%s/%s", namespace, key);
                 }
                 @Override
                 public String method() {

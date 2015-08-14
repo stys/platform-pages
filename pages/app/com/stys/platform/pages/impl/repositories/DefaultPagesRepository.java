@@ -38,18 +38,25 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         page.namespace = selector.namespace;
         page.key = selector.key;
         
+        // Namespace must be set
+        if (page.namespace == null || page.namespace.isEmpty()) {
+            return BadRequest(null);
+        }
+        
+        // Key must be set
+        if (page.key == null || page.key.isEmpty()) {
+            return BadRequest(null);
+        }
+        
+        // Update by creating new revision
 		if (selector.revision.isEmpty()) {
-            
             // Update or create page
             update(page);
             // Get updated page
 			return get(selector);
-		
         }  else {
-		
 			// Updating existing revision is a bad idea
 			throw new UnsupportedOperationException("Cannot update existing revision");
-	
 		}
 
 	}
