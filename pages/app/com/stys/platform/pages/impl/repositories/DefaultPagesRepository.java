@@ -167,7 +167,6 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         revision_.page = page_;
         revision_.source = page.source;
         revision_.content = page.content;
-        //revision_.createDateTime = new Timestamp(System.currentTimeMillis());
         
         final AccessEntity access_ = new AccessEntity();
         access_.page = page_;
