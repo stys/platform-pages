@@ -175,6 +175,9 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         final StateEntity state_ = new StateEntity();
         state_.page = page_;
         state_.state = page.state.name();
+        if (page.state.equals(State.Published)) {
+            meta_.published = new Timestamp(System.currentTimeMillis());
+        }
         
         // Set reverse links
         page_.meta = meta_;
@@ -233,6 +236,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
             access_ = new AccessEntity();
             access_.access = page.access.name();
             page_.access = access_;
+            access_.page = page_;
         }
         
         // Update state
@@ -245,6 +249,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
                 meta_.published = new Timestamp(System.currentTimeMillis());
             }
             page_.state = state_;
+            state_.page = page_;
         }
         
         // Transactional save
