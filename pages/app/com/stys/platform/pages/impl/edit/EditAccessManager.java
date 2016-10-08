@@ -1,64 +1,25 @@
 package com.stys.platform.pages.impl.edit;
 
-import java.lang.reflect.Constructor;
-
-import play.Application;
-import play.Logger;
-
-import com.stys.platform.pages.Result;
-import com.stys.platform.pages.Results;
-import com.stys.platform.pages.Service;
+import com.stys.platform.pages.api.Result;
+import com.stys.platform.pages.api.Results;
 import com.stys.platform.pages.impl.domain.*;
 
-public class EditAccessManager extends Results implements Service<Result<Page>, Selector, Page> {
+import javax.inject.Inject;
+import javax.inject.Named;
 
-	/**
-	 * User service configuration key
-	 */
-	private static final String USER_SERVICE_KEY = "com.stys.platform.pages.edit.user.service";
-	
-	/**
-	 * Intance of user service
-	 */
+public class EditAccessManager extends Results implements PageService {
+
 	private UserService	users;
-	
-	/**
-	 * Instance of application
-	 */
-	private Application application;
-	
-	/**
-	 * Instance of deligate service
-	 */
-	private Service<Result<Page>, Selector, Page> delegate;
-	
-	/**
-	 * Constructor
-	 * @param application - injected instance of application
-	 * @param delegate - injected instance of delegate service
-	 */
-	public EditAccessManager(Application application, Service<Result<Page>, Selector, Page> delegate) {
-		
-		// Store references
-		this.application = application;
+
+	private PageService delegate;
+
+	@Inject
+	public EditAccessManager(
+        @Named("edit:access:delegate") PageService delegate,
+        UserService users
+    ) {
 		this.delegate = delegate;
-		
-		// Load user service
-		try {
-			// Get name of user service class
-			String name = this.application.configuration().getString(USER_SERVICE_KEY);
-			// Write to log
-			Logger.debug(String.format("Picked %s", name));
-			// Load class
-			Class<?> clazz = this.application.classloader().loadClass(name);
-			// Get constructor
-			Constructor<?> constructor = clazz.getConstructor(Application.class);
-			// Create an instance
-			this.users = (UserService) constructor.newInstance(this.application);
-		} catch (Exception ex) {
-			// Can not continue without user service
-			throw new RuntimeException("Can not load user service", ex);
-		}
+        this.users = users;
 	}
 	
 	@Override

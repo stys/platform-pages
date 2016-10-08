@@ -1,36 +1,19 @@
 package com.stys.platform.pages.impl.repositories;
 
-import com.stys.platform.pages.impl.domain.Selector;
-import com.stys.platform.pages.impl.models.*;
-import org.joda.time.DateTime;
-import play.Application;
-
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.TxRunnable;
-import com.stys.platform.pages.Result;
-import com.stys.platform.pages.Results;
-import com.stys.platform.pages.Service;
-import com.stys.platform.pages.impl.domain.Access;
-import com.stys.platform.pages.impl.domain.Page;
-import com.stys.platform.pages.impl.domain.State;
+import com.stys.platform.pages.api.Result;
+import com.stys.platform.pages.api.Results;
+import com.stys.platform.pages.impl.domain.*;
+import com.stys.platform.pages.impl.models.*;
+import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
 
-/**
- * Implementation of repository
- */
-public class DefaultPagesRepository extends Results implements Service<Result<Page>, Selector, Page> {
-
-	/**
-	 * Constructs new instance
-	 */
-	public DefaultPagesRepository(Application application, Service<Result<Page>, Selector, Page> delegate) {
-		/* Empty */
-	}
+/** Implementation of repository */
+public class DefaultPagesRepository extends Results implements PageService {
 	
-	/**
-	 * Creates a new revision, when called without a specific revision.
-	 */
+	/** Creates a new revision, when called without a specific revision */
 	@Override
     public Result<Page> put(Selector selector, Page page) {
 		
@@ -61,9 +44,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
 
 	}
 
-	/**
-	 * Returns a page DTO
-	 */
+	/** Returns a page DTO */
     @Override
     public Result<Page> get(Selector selector) {
 
@@ -114,9 +95,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
     }
 
 
-    /**
-     * Convert database entities to page DTO
-     */
+    /** Convert database entities to page DTO */
     private static Page fromEntity(PageEntity page, MetaEntity meta, RevisionEntity revision, AccessEntity access, StateEntity state) {
     	
     	Page page_ = new Page();
@@ -144,9 +123,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         
     }
 
-    /**
-     * Creates database records from page DTO
-     */
+    /** Creates page entity from page domain object */
     private static void create(final Page page) {
 
         final PageEntity page_ = new PageEntity();
@@ -187,12 +164,9 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         
         // Transactional save
         txSave(page_, meta_, revision_, access_, state_);
-        
     }
 
-    /**
-     * Updates database records from page DTO
-     */
+    /** Updates database records from page DTO */
     private static void update(final Page page) {
 
         // Lookup page 
@@ -257,9 +231,7 @@ public class DefaultPagesRepository extends Results implements Service<Result<Pa
         
     }
 
-    /**
-     * Transactional save database entities
-     */
+    /** Transactional save database entities */
     private static void txSave(
             final PageEntity page, final MetaEntity meta, final RevisionEntity revision,
             final AccessEntity access, final StateEntity state) {

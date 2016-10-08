@@ -1,4 +1,4 @@
-package com.stys.platform.pages;
+package com.stys.platform.pages.api;
 
 /**
  * Pages service plugin used to wrap a page service. Wrapping 

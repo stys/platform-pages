@@ -8,15 +8,13 @@ import com.stys.platform.pages.impl.domain.Selector;
 import play.Application;
 import play.twirl.api.Content;
 
-import com.stys.platform.pages.Result;
-import com.stys.platform.pages.Results;
-import com.stys.platform.pages.Service;
+import com.stys.platform.pages.api.Result;
+import com.stys.platform.pages.api.Results;
+import com.stys.platform.pages.api.Service;
 import com.stys.platform.pages.impl.domain.Page;
 import com.stys.platform.pages.impl.domain.Template;
 
-/**
- * Render page: show editor or corresponding error
- */
+/** Render page: show editor or corresponding error */
 public class ViewTemplateSwitcher extends Results implements Service<Result<Content>, Selector, Page> {
 
 	private static final String TEMPLATES_KEY = "com.stys.platform.pages.templates";

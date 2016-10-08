@@ -2,9 +2,7 @@ package com.stys.platform.pages.impl.domain;
 
 import java.util.List;
 
-/**
- * User interface
- */
+/** User interface */
 public interface User {
 	
 	public String getID();

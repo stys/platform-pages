@@ -2,15 +2,13 @@ name := "platform-pages"
 
 organization := "com.stys"
 
-version := "1.1.6"
+version := "1.2.0"
 
-scalaVersion := "2.11.2"
-
-crossScalaVersions := Seq("2.10.4", "2.11.2")
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   "org.commonjava.googlecode.markdown4j" % "markdown4j" % "2.2-cj-1.0",
-  javaEbean
+  evolutions
 )     
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)

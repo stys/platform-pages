@@ -7,9 +7,9 @@ import play.Application;
 import play.Logger;
 import play.twirl.api.Content;
 
-import com.stys.platform.pages.Plugin;
-import com.stys.platform.pages.Result;
-import com.stys.platform.pages.Service;
+import com.stys.platform.pages.api.Plugin;
+import com.stys.platform.pages.api.Result;
+import com.stys.platform.pages.api.Service;
 import com.stys.platform.pages.impl.domain.ContentResult;
 import com.stys.platform.pages.impl.domain.ContentResultAdapter;
 import com.stys.platform.pages.impl.domain.Page;
@@ -52,7 +52,7 @@ public class DefaultViewPlugin extends ViewPlugin {
     	 // Load services
         try {
         	
-        	// Repository
+        	// RepositoryService
         	String name = this.application.configuration().getString(REPOSITORY_KEY);
         	Logger.debug(String.format("Picked %s", name));
         	Class<?> clazz = this.application.classloader().loadClass(name);

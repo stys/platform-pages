@@ -1,4 +1,4 @@
-package com.stys.platform.pages;
+package com.stys.platform.pages.api;
 
 import play.libs.F;
 

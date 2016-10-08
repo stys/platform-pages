@@ -1,11 +1,8 @@
-package com.stys.platform.pages;
+package com.stys.platform.pages.api;
 
 import play.mvc.Controller;
 
-
-/**
- * Result helpers
- */
+/** Result helpers */
 public class Results extends Controller {
 
 	public <T> Result<T> Ok(T content) {
@@ -48,7 +45,7 @@ public class Results extends Controller {
         }
 
         @Override
-        public Status getStatus() {
+        public play.mvc.Results.Status getStatus() {
             return this.status;
         }
     }

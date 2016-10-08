@@ -1,8 +1,6 @@
-package com.stys.platform.pages;
+package com.stys.platform.pages.api;
 
-/**
- * Generic result type
- */
+
 public interface Result<T> {
 
     public T getContent();
