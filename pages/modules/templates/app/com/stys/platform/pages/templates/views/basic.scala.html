@@ -1,0 +1,28 @@
+@(page: com.stys.platform.pages.api.Page)
+
+
+    <p>Template: new</p>
+
+    <p>Revision: @page.revision </p>
+
+    <p>State: @page.state </p>
+
+    <p>Summary: @page.summary </p>
+
+    <p>Thumb: @page.thumb </p>
+
+    <p>Description: @page.description </p>
+
+    <p>Keywords: @page.keywords </p>
+
+    <p>Category: @page.category </p>
+
+    <p>Published: @page.published</p>
+
+    <p>Edited: @page.edited</p>
+
+    <article id="content">
+    @Html(page.content)
+    </article>
+
+    <a class="btn btn-default" href="@com.stys.platform.pages.impl.controllers.routes.Actions.edit(page.namespace, page.key)">Редактировать</a>
