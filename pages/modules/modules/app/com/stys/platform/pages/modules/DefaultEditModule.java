@@ -1,9 +1,10 @@
 package com.stys.platform.pages.modules;
 
 import com.stys.platform.pages.api.*;
-import com.stys.platform.pages.impl.edit.EditAccessManager;
-import com.stys.platform.pages.impl.edit.EditService;
-import com.stys.platform.pages.impl.edit.EditTemplateService;
+import com.stys.platform.pages.impl.DefaultTemplateProvider;
+import com.stys.platform.pages.impl.EditAccessManager;
+import com.stys.platform.pages.impl.EditService;
+import com.stys.platform.pages.impl.EditTemplateService;
 import com.stys.platform.pages.markdown.DefaultMarkdownPluginsProvider;
 import com.stys.platform.pages.markdown.MarkdownPluginsProvider;
 import com.stys.platform.pages.markdown.MarkdownProcessor;
@@ -21,6 +22,7 @@ public class DefaultEditModule extends Module {
         return seq(
             bind(ContentService.class).qualifiedWith("edit").to(EditService.class),
             bind(ContentService.class).qualifiedWith("edit:delegate").to(EditTemplateService.class),
+            bind(TemplateProvider.class).qualifiedWith("edit:template-provider").to(DefaultTemplateProvider.class),
             bind(PageService.class).qualifiedWith("edit:template:delegate").to(EditAccessManager.class),
             bind(PageService.class).qualifiedWith("edit:access:delegate").to(MarkdownProcessor.class),
             bind(PageService.class).qualifiedWith("processor:delegate").to(DefaultPagesRepository.class),

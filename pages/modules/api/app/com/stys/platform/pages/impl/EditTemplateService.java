@@ -1,4 +1,4 @@
-package com.stys.platform.pages.impl.edit;
+package com.stys.platform.pages.impl;
 
 import com.stys.platform.pages.api.*;
 import play.twirl.api.Content;
@@ -9,11 +9,13 @@ import com.stys.platform.pages.api.Results;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static com.stys.platform.pages.api.TemplateKeys.EDITOR_TEMPLATE_KEY;
+import static com.stys.platform.pages.api.TemplateKeys.ERROR_TEMPLATE_KEY;
+
 /** Applies template to page using edit templates */
 public class EditTemplateService extends Results implements ContentService {
 
 	private PageService source;
-
     private TemplateProvider templates;
 
 	@Inject
@@ -27,23 +29,27 @@ public class EditTemplateService extends Results implements ContentService {
 	
 	@Override
 	public Result<Content> get(Selector selector) {
-	
-		// Retrieve page to edit
 		Result<Page> result = this.source.get(selector);
-	
-		// Process result
-		return map(result, templates.get(result.getStatus().name()).render(result.getPayload()));
+		return map(result, render(result.getStatus(), result.getPayload()));
 	}
 
 	@Override
 	public Result<Content> put(Selector selector, Page page) {
-		
-		// Delegate put
 		Result<Page> result = source.put(selector, page);
-	
-		// Process result
-		return map(result, templates.get(result.getStatus().name()).render(result.getPayload()));
+		return map(result, render(result.getStatus(), result.getPayload()));
 		
 	}
-	
+
+    private Content render(Result.Status status, Page page) {
+        // Process result
+        Template template;
+        if (status == Result.Status.Ok) {
+            template = templates.get(EDITOR_TEMPLATE_KEY);
+        } else {
+            template = templates.get(ERROR_TEMPLATE_KEY);
+            page.content = status.name();
+        }
+        return template.render(page);
+    }
+
 }

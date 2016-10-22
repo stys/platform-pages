@@ -30,7 +30,7 @@ public class DefaultPagesRepository extends Results implements PageService {
         }
         
         // Update by creating new revision
-		if (selector.revision.isEmpty()) {
+		if (!selector.revision.isPresent()) {
             // Update or create page
             update(page);
             // Get updated page
@@ -69,7 +69,7 @@ public class DefaultPagesRepository extends Results implements PageService {
 		RevisionEntity revision_ = page_.revision;
 
 		// If specific revision requested
-		if (selector.revision.isDefined()) {
+		if (selector.revision.isPresent()) {
 			// Find by revision id
 			revision_ = RevisionEntity.find.byId(selector.revision.get());
             if (null == revision_) {

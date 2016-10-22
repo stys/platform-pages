@@ -1,4 +1,4 @@
-package com.stys.platform.pages.templates;
+package templates;
 
 import com.stys.platform.pages.api.*;
 import play.Configuration;
@@ -8,20 +8,20 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class EditTemplate implements Template {
+import static com.stys.platform.pages.api.TemplateKeys.ENABLED_TEMPLATES_KEY;
 
-    private static final String TEMPLATES_CONFIGURATION_KEY = "pages.templates";
+public class EditorTemplate implements Template {
+
     private static final String CATEGORIES_CONFIGURATION_KEY = "pages.categories";
 
     private List<String> templates;
     private List<String> categories;
 
-    @Inject
-    public EditTemplate(Configuration configuration) {
-        templates = new ArrayList<>();
-        templates.addAll(configuration.getConfig(TEMPLATES_CONFIGURATION_KEY).asMap().keySet());
-
+    public EditorTemplate(Configuration configuration) {
+        templates = configuration.getConfig(ENABLED_TEMPLATES_KEY).asMap().keySet().stream()
+                .map(t -> ENABLED_TEMPLATES_KEY + '.' + t).collect(Collectors.toList());
         categories = configuration.getStringList(CATEGORIES_CONFIGURATION_KEY);
     }
 
@@ -37,8 +37,7 @@ public class EditTemplate implements Template {
         Collections.addAll(access, Access.values());
 
         // render editor with page content
-        return com.stys.platform.pages.templates.views.html.editor.render(
-            page, templates, categories, states, access);
+        return views.html.editor.render(page, templates, categories, states, access);
 
     }
 

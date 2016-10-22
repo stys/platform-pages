@@ -1,4 +1,4 @@
-package com.stys.platform.pages.impl.edit;
+package com.stys.platform.pages.impl;
 
 import com.stys.platform.pages.api.*;
 

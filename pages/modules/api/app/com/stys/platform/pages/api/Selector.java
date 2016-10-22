@@ -1,28 +1,26 @@
 package com.stys.platform.pages.api;
 
-import play.libs.F;
+import java.util.Optional;
 
-/**
- * Selector by namespace, key and optional revision
- */
+/** Selector by namespace, key and optional revision */
 public class Selector {
     
     public String namespace;
     
     public String key;
     
-    public F.Option<Long> revision;
+    public Optional<Long> revision;
     
     public Selector(String namespace, String key) {
         this.namespace = namespace;
         this.key = key;
-        this.revision = new F.None<>();
+        this.revision = Optional.empty();
     }
     
     public Selector(String namespace, String key, Long revision) {
         this.namespace = namespace;
         this.key = key;
-        this.revision = F.Some(revision);
+        this.revision = Optional.of(revision);
     }
        
     

@@ -1,10 +1,12 @@
-package com.stys.platform.pages.impl.view;
+package com.stys.platform.pages.impl;
 
 import com.stys.platform.pages.api.*;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import static com.stys.platform.pages.api.TemplateKeys.ERROR_TEMPLATE_KEY;
 
 /** Render page: show editor or corresponding error */
 public class ViewTemplateService extends Results implements ContentService {
@@ -27,32 +29,15 @@ public class ViewTemplateService extends Results implements ContentService {
 	
 		// Retrieve page to edit
 		final Result<Page> result = this.source.get(selector);
-	
-		// Ok
-		if( result.getStatus().equals(Result.Status.Ok)) {
-			// Get template
-			Template template = provider.get(result.getPayload().template);
-			// Default template			
-			if (null == template) {
-				Content content = new Content() {
-					@Override
-					public String body() {
-						return result.getPayload().content;
-					}
 
-					@Override
-					public String contentType() {
-						return "text/plain";
-					}
-				};
-				return Ok(content);
-			} else {
-				return Ok(template.render(result.getPayload()));
-			}
+		Template template;
+		if(result.getStatus().equals(Result.Status.Ok)) {
+			template = provider.get(result.getPayload().template);
+		} else {
+			template = provider.get(ERROR_TEMPLATE_KEY);
 		}
-		
-		// Process errors
-		return map(result, provider.get(result.getStatus().name()).render(result.getPayload()));
+
+		return map(result, template.render(result.getPayload()));
 	}
 
 	@Override

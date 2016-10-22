@@ -2,9 +2,11 @@ package com.stys.platform.pages.modules;
 
 import com.stys.platform.pages.api.ContentService;
 import com.stys.platform.pages.api.PageService;
-import com.stys.platform.pages.impl.view.ViewAccessManager;
-import com.stys.platform.pages.impl.view.ViewService;
-import com.stys.platform.pages.impl.view.ViewTemplateService;
+import com.stys.platform.pages.api.TemplateProvider;
+import com.stys.platform.pages.impl.DefaultTemplateProvider;
+import com.stys.platform.pages.impl.ViewAccessManager;
+import com.stys.platform.pages.impl.ViewService;
+import com.stys.platform.pages.impl.ViewTemplateService;
 import com.stys.platform.pages.markdown.DefaultMarkdownPluginsProvider;
 import com.stys.platform.pages.markdown.MarkdownPluginsProvider;
 import com.stys.platform.pages.markdown.MarkdownProcessor;
@@ -15,7 +17,6 @@ import play.api.inject.Binding;
 import play.api.inject.Module;
 import scala.collection.Seq;
 
-/** */
 public class DefaultViewModule extends Module {
 
     @Override
@@ -23,6 +24,7 @@ public class DefaultViewModule extends Module {
 		return seq(
             bind(ContentService.class).qualifiedWith("view").to(ViewService.class),
             bind(ContentService.class).qualifiedWith("view:delegate").to(ViewTemplateService.class),
+            bind(TemplateProvider.class).qualifiedWith("view:template-provider").to(DefaultTemplateProvider.class),
             bind(PageService.class).qualifiedWith("view:template:delegate").to(ViewAccessManager.class),
             bind(PageService.class).qualifiedWith("view:access:delegate").to(MarkdownProcessor.class),
             bind(PageService.class).qualifiedWith("processor:delegate").to(DefaultPagesRepository.class),

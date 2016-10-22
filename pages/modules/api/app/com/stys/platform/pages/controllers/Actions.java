@@ -1,4 +1,4 @@
-package com.stys.platform.pages.impl.controllers;
+package com.stys.platform.pages.controllers;
 
 import com.stys.platform.pages.api.ContentService;
 import com.stys.platform.pages.api.Page;
@@ -78,23 +78,7 @@ public class Actions extends play.mvc.Controller {
     	if (result.getStatus().equals(com.stys.platform.pages.api.Result.Status.Ok)) {
     		final String namespace = page.namespace;
             final String key = page.key;
-            return redirect(new Call() {
-                @Override
-                public String url() {
-                    return request().uri() + String.format("/%s/%s", namespace, key);
-                }
-
-                @Override
-                public String method() {
-                    return "GET";
-                }
-
-                @Override
-                public String fragment() {
-                    return "";
-                }
-            });
-
+            return redirect(routes.Actions.view(namespace, key));
         // Else -> display returned content: probably containing some description of error
     	} else {
     		return toPlayMvcResult(result);

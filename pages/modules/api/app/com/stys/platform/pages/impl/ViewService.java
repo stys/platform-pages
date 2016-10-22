@@ -1,4 +1,4 @@
-package com.stys.platform.pages.impl.view;
+package com.stys.platform.pages.impl;
 
 
 import com.stys.platform.pages.api.Result;
