@@ -4,23 +4,24 @@ import com.stys.platform.pages.api.*;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Singleton;
 
 import static com.stys.platform.pages.api.TemplateKeys.ERROR_TEMPLATE_KEY;
 
-/** Render page: show editor or corresponding error */
-public class ViewTemplateService extends Results implements ContentService {
+@Singleton
+public class DefaultViewService implements Service<Result<Content>, Selector, Page> {
 
-	private PageService source;
+	public interface Delegate extends Service<Result<Page>, Selector, Page> {}
+
+	private Service<Result<Page>, Selector, Page> delegate;
+
+    public interface ViewTemplateProvider extends TemplateProvider {}
 
     private TemplateProvider provider;
 
     @Inject
-	public ViewTemplateService(
-        @Named("view:template:delegate") PageService source,
-        @Named("view:template-provider") TemplateProvider provider
-    ) {
-	    this.source = source;
+	public DefaultViewService(Delegate delegate, ViewTemplateProvider provider) {
+	    this.delegate = delegate;
 		this.provider = provider;
 	}
 	
@@ -28,7 +29,7 @@ public class ViewTemplateService extends Results implements ContentService {
 	public Result<Content> get(Selector selector) {
 	
 		// Retrieve page to edit
-		final Result<Page> result = this.source.get(selector);
+		final Result<Page> result = this.delegate.get(selector);
 
 		Template template;
 		if(result.getStatus().equals(Result.Status.Ok)) {
@@ -37,13 +38,12 @@ public class ViewTemplateService extends Results implements ContentService {
 			template = provider.get(ERROR_TEMPLATE_KEY);
 		}
 
-		return map(result, template.render(result.getPayload()));
+		return result.map(r -> template.render(r.getPayload()));
 	}
 
 	@Override
 	public Result<Content> put(Selector selector, Page page) {
-		// Not allowed
-        throw new UnsupportedOperationException("ViewTemplateService does not support put operation");
+        throw new UnsupportedOperationException();
 	}
 	
 }

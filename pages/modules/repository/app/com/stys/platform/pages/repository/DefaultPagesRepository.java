@@ -1,15 +1,17 @@
 package com.stys.platform.pages.repository;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.TxRunnable;
 import com.stys.platform.pages.api.*;
 import com.stys.platform.pages.repository.models.*;
 import org.joda.time.DateTime;
 
-import java.sql.Timestamp;
+import static com.stys.platform.pages.api.Result.Status.BadRequest;
+import static com.stys.platform.pages.api.Result.Status.NotFound;
+import static com.stys.platform.pages.api.Result.Status.Ok;
+import static com.stys.platform.pages.api.State.Published;
 
 /** Implementation of repository */
-public class DefaultPagesRepository extends Results implements PageService {
+public class DefaultPagesRepository implements Service<Result<Page>, Selector, Page> {
 	
 	/** Creates a new revision, when called without a specific revision */
 	@Override
@@ -21,23 +23,23 @@ public class DefaultPagesRepository extends Results implements PageService {
         
         // Namespace must be set
         if (page.namespace == null || page.namespace.isEmpty()) {
-            return BadRequest(null);
+            return Result.of(BadRequest, null);
         }
         
         // Key must be set
         if (page.key == null || page.key.isEmpty()) {
-            return BadRequest(null);
+            return Result.of(BadRequest, null);
         }
         
         // Update by creating new revision
-		if (!selector.revision.isPresent()) {
+		if (null == selector.revision) {
             // Update or create page
             update(page);
             // Get updated page
 			return get(selector);
         }  else {
 			// Updating existing revision is a bad idea
-			throw new UnsupportedOperationException("Cannot update existing revision");
+			throw new UnsupportedOperationException();
 		}
 
 	}
@@ -62,19 +64,19 @@ public class DefaultPagesRepository extends Results implements PageService {
 			Page stub = new Page();
 			stub.namespace = selector.namespace;
 			stub.key = selector.key;
-			return NotFound(stub);
+			return Result.of(NotFound, stub);
         }
 
 		// Find revision
 		RevisionEntity revision_ = page_.revision;
 
 		// If specific revision requested
-		if (selector.revision.isPresent()) {
+		if (null != selector.revision) {
 			// Find by revision id
-			revision_ = RevisionEntity.find.byId(selector.revision.get());
+			revision_ = RevisionEntity.find.byId(selector.revision);
             if (null == revision_) {
                 // Specific revision is no found
-                return NotFound(null);
+                return Result.of(NotFound, null);
             }
 		}
 		
@@ -88,10 +90,9 @@ public class DefaultPagesRepository extends Results implements PageService {
         StateEntity state_ = page_.state;
         
 		// Convert to DTO and wrap into Result
-		return Ok(fromEntity(page_, meta_, revision_, access_, state_));
+		return Result.of(Ok, fromEntity(page_, meta_, revision_, access_, state_));
         
     }
-
 
     /** Convert database entities to page DTO */
     private static Page fromEntity(PageEntity page, MetaEntity meta, RevisionEntity revision, AccessEntity access, StateEntity state) {
@@ -107,8 +108,8 @@ public class DefaultPagesRepository extends Results implements PageService {
 		page_.description = meta.description;
 		page_.keywords = meta.keywords;
 		page_.category = meta.category;
-		page_.published = new DateTime(meta.published);
-        page_.edited = new DateTime(meta.edited);
+		page_.published = state.state.equals(Published.name()) ? new DateTime(state.updateDateTime) : null;
+        page_.edited = new DateTime(revision.createDateTime);
         
         page_.revision = revision.id;
 		page_.source = revision.source;
@@ -118,7 +119,6 @@ public class DefaultPagesRepository extends Results implements PageService {
         page_.state = State.valueOf(state.state);
         
         return page_;
-        
     }
 
     /** Creates page entity from page domain object */
@@ -150,9 +150,6 @@ public class DefaultPagesRepository extends Results implements PageService {
         final StateEntity state_ = new StateEntity();
         state_.page = page_;
         state_.state = page.state.name();
-        if (page.state.equals(State.Published)) {
-            meta_.published = new Timestamp(System.currentTimeMillis());
-        }
         
         // Set reverse links
         page_.meta = meta_;
@@ -198,7 +195,6 @@ public class DefaultPagesRepository extends Results implements PageService {
             revision_.source = page.source;
             revision_.content = page.content;
             page_.revision = revision_;
-            meta_.edited = new Timestamp(System.currentTimeMillis());
         }
         
         // Update access
@@ -217,32 +213,25 @@ public class DefaultPagesRepository extends Results implements PageService {
         if(!state_.state.equals(page.state.name())) {
             state_ = new StateEntity();
             state_.state = page.state.name();
-            if (page.state.equals(State.Published)) {
-                meta_.published = new Timestamp(System.currentTimeMillis());
-            }
             page_.state = state_;
             state_.page = page_;
         }
         
         // Transactional save
         txSave(page_, meta_, revision_, access_, state_);
-        
     }
 
     /** Transactional save database entities */
     private static void txSave(
             final PageEntity page, final MetaEntity meta, final RevisionEntity revision,
             final AccessEntity access, final StateEntity state) {
-        Ebean.execute(new TxRunnable() {
-            @Override
-            public void run() {
-                page.save();
-                meta.save();
-                revision.save();
-                access.save();
-                state.save();
-            }
-        });    
+        Ebean.execute(() -> {
+            page.save();
+            meta.save();
+            revision.save();
+            access.save();
+            state.save();
+        });
     }
 
 }

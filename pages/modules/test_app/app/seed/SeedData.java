@@ -1,20 +1,20 @@
-package bootstrap;
+package seed;
 
 import com.google.inject.Singleton;
 import com.stys.platform.pages.api.Access;
 import com.stys.platform.pages.api.Page;
 import com.stys.platform.pages.api.Selector;
 import com.stys.platform.pages.api.State;
-import com.stys.platform.pages.impl.EditService;
+import com.stys.platform.pages.impl.DefaultEditService;
 
 import javax.inject.Inject;
 
 /** Populate database with initial data */
 @Singleton
-public class InitialData {
+public class SeedData {
 
     @Inject
-    public InitialData(EditService pages) {
+    public SeedData(DefaultEditService pages) {
         Page page = new Page();
         page.owner = "root";
         page.title = "Hello world!";

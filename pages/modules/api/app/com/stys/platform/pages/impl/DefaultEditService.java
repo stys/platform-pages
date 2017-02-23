@@ -4,44 +4,43 @@ import com.stys.platform.pages.api.*;
 import play.twirl.api.Content;
 
 import com.stys.platform.pages.api.Result;
-import com.stys.platform.pages.api.Results;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Singleton;
 
 import static com.stys.platform.pages.api.TemplateKeys.EDITOR_TEMPLATE_KEY;
 import static com.stys.platform.pages.api.TemplateKeys.ERROR_TEMPLATE_KEY;
 
-/** Applies template to page using edit templates */
-public class EditTemplateService extends Results implements ContentService {
+@Singleton
+public class DefaultEditService implements Service<Result<Content>, Selector, Page> {
 
-	private PageService source;
-    private TemplateProvider templates;
+    public interface Delegate extends Service<Result<Page>, Selector, Page> {}
+
+    public interface EditTemplateProvider extends TemplateProvider {}
+
+	private Service<Result<Page>, Selector, Page> delegate;
+
+	private TemplateProvider templates;
 
 	@Inject
-	public EditTemplateService(
-        @Named("edit:template:delegate") PageService source,
-        @Named("edit:template-provider") TemplateProvider templates
-    ) {
-		this.source = source;
+	public DefaultEditService(Delegate delegate, EditTemplateProvider templates) {
+		this.delegate = delegate;
 		this.templates = templates;
 	}
 	
 	@Override
 	public Result<Content> get(Selector selector) {
-		Result<Page> result = this.source.get(selector);
-		return map(result, render(result.getStatus(), result.getPayload()));
+		Result<Page> result = this.delegate.get(selector);
+		return result.map(r -> render(r.getStatus(), r.getPayload()));
 	}
 
 	@Override
 	public Result<Content> put(Selector selector, Page page) {
-		Result<Page> result = source.put(selector, page);
-		return map(result, render(result.getStatus(), result.getPayload()));
-		
+		Result<Page> result = delegate.put(selector, page);
+		return result.map(r -> render(r.getStatus(), r.getPayload()));
 	}
 
     private Content render(Result.Status status, Page page) {
-        // Process result
         Template template;
         if (status == Result.Status.Ok) {
             template = templates.get(EDITOR_TEMPLATE_KEY);

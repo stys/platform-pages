@@ -4,9 +4,11 @@ import com.stys.platform.pages.api.Role;
 import com.stys.platform.pages.api.User;
 import com.stys.platform.pages.api.UserService;
 
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 
+@Singleton
 public class MyUserService implements UserService {
 
     @Override

@@ -4,9 +4,11 @@ import com.stys.platform.pages.markdown.plugins.WikitablePlugin;
 import com.stys.platform.pages.markdown.plugins.YoutubePlugin;
 import org.markdown4j.Plugin;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class DefaultMarkdownPluginsProvider implements MarkdownPluginsProvider {
 
     private List<Plugin> plugins;

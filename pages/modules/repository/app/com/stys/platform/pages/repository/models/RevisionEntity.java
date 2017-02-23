@@ -27,14 +27,12 @@ public class RevisionEntity extends Model {
 	 * in which another user may create a new record and increment a version of the same 
 	 * item. This would result in a version collision and a violation of a unique constraint.
 	 * 
-	 * Thus a reasonable way is to create a global autoincrementing revision counter and make
+	 * Thus a reasonable way is to create a global auto-incrementing revision counter and make
 	 * it the primary key of the table. The composite unique constraint becomes unnecessary, because
 	 * the primary key itself is unique.  
 	 */
 	
-	/** 
-	 * Global revision number. 
-	 */ 
+	/** Global revision number */
 	@Id
     public Long id;
 
@@ -50,9 +48,6 @@ public class RevisionEntity extends Model {
     @CreatedTimestamp
     public Timestamp createDateTime;
 
-    @UpdatedTimestamp
-    public Timestamp updateDateTime;
-
-    public static final Finder<Long, RevisionEntity> find = new Finder<Long, RevisionEntity>(RevisionEntity.class);
+    public static final Finder<Long, RevisionEntity> find = new Finder<>(RevisionEntity.class);
 
 }

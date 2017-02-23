@@ -45,7 +45,7 @@ create table pages (
 create table pages_revisions (
   id                        bigint not null,
   page_id                   bigint,
-  source                    clob,
+  delegate                    clob,
   content                   clob,
   create_date_time          timestamp not null,
   update_date_time          timestamp not null,

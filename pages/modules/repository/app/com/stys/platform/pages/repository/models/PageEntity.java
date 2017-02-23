@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 import com.avaje.ebean.Model;
 
-/** Page entity */
 @Entity
 @Table(name = "pages")
 public class PageEntity extends Model {

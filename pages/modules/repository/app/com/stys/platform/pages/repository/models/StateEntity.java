@@ -2,6 +2,7 @@ package com.stys.platform.pages.repository.models;
 
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.Model;
+import com.avaje.ebean.annotation.UpdatedTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,10 +23,9 @@ public class StateEntity extends Model {
     @ManyToOne
     public PageEntity page;
 
-    @CreatedTimestamp
-    public Timestamp createDateTime;
+    @UpdatedTimestamp
+    public Timestamp updateDateTime;
     
     public static final Model.Finder<Long, StateEntity> find = new Model.Finder<>(StateEntity.class);
-
 
 }

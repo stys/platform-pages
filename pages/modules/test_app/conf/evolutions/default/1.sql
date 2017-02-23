@@ -7,7 +7,6 @@ create table pages_access (
   id                        bigint not null,
   access_                   varchar(255),
   page_id                   bigint,
-  create_date_time          timestamp not null,
   constraint pk_pages_access primary key (id))
 ;
 
@@ -20,8 +19,6 @@ create table pages_meta (
   keywords                  clob,
   category                  varchar(255),
   template                  varchar(255),
-  published                 timestamp,
-  edited                    timestamp,
   page_id                   bigint,
   constraint uq_pages_meta_page_id unique (page_id),
   constraint pk_pages_meta primary key (id))
@@ -48,7 +45,6 @@ create table pages_revisions (
   source                    clob,
   content                   clob,
   create_date_time          timestamp not null,
-  update_date_time          timestamp not null,
   constraint pk_pages_revisions primary key (id))
 ;
 
@@ -56,7 +52,7 @@ create table pages_state (
   id                        bigint not null,
   state_                    varchar(255),
   page_id                   bigint,
-  create_date_time          timestamp not null,
+  update_date_time          timestamp not null,
   constraint pk_pages_state primary key (id))
 ;
 

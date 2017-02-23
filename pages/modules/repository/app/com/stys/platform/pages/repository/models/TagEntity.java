@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/** Page tags */
 @Entity
 @Table(name = "pages_tags")
 public class TagEntity extends Model {

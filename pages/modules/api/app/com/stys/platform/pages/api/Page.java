@@ -2,6 +2,8 @@ package com.stys.platform.pages.api;
 
 import org.joda.time.DateTime;
 
+import java.time.LocalDate;
+
 public class Page {
 
     public String namespace;
@@ -33,7 +35,9 @@ public class Page {
     public String keywords;
     
     public String category;
-    
+
+    public DateTime created;
+
     public DateTime published;
     
     public DateTime edited;

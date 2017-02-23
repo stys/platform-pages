@@ -6,11 +6,13 @@ import play.Configuration;
 import play.Environment;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.stys.platform.pages.api.TemplateKeys.*;
 
+@Singleton
 public class DefaultTemplateProvider implements TemplateProvider {
 
     private Map<String, Template> enabledTemplates;
@@ -57,7 +59,7 @@ public class DefaultTemplateProvider implements TemplateProvider {
             case ERROR_TEMPLATE_KEY:
                 return this.errorTemplate;
             case EDITOR_TEMPLATE_KEY:
-                return  this.editorTemplate;
+                return this.editorTemplate;
             default:
                 Template template = this.enabledTemplates.get(name);
                 if (null != template) return template;

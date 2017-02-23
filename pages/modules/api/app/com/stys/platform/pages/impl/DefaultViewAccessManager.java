@@ -3,19 +3,21 @@ package com.stys.platform.pages.impl;
 import com.stys.platform.pages.api.*;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Singleton;
 
-public class ViewAccessManager extends Results implements PageService {
+import static com.stys.platform.pages.api.Result.Status.*;
+
+@Singleton
+public class DefaultViewAccessManager implements Service<Result<Page>, Selector, Page> {
+
+	public interface Delegate extends Service<Result<Page>, Selector, Page> {};
+
+	private Service<Result<Page>, Selector, Page> delegate;
 
 	private UserService	users;
-
-	private PageService delegate;
 	
 	@Inject
-	public ViewAccessManager(
-        @Named("view:access:delegate") PageService delegate,
-        UserService users
-	) {
+	public DefaultViewAccessManager(Delegate delegate, UserService users) {
         this.delegate = delegate;
         this.users = users;
 	}
@@ -24,13 +26,13 @@ public class ViewAccessManager extends Results implements PageService {
 	public Result<Page> get(Selector selector) {
 		
 		// Default result
-		Result<Page> result = BadRequest(null);
+		Result<Page> result = Result.of(BadRequest, null);
 		
 		// Get page from delegate service
 		Result<Page> previous = this.delegate.get(selector);
 		
 		// If page not found - continue 
-		if( previous.getStatus().equals(Result.Status.NotFound) ) {
+		if( previous.getStatus().equals(NotFound) ) {
 			return previous;
 		}
 		
@@ -68,28 +70,28 @@ public class ViewAccessManager extends Results implements PageService {
 		if( ! isUserPresent ) {
 			// Can view if page is `published` or `closed` and access is `public` or `open`
 			if( (isPublished || isClosed) && (isPublic || isOpen) ) return previous;
-			else result = Unauthorized(null); 		
+			else result = Result.of(Unauthorized, null);
 		}
 		
 		// Simple user, but not the owner of the page
 		if( (! isOwner) && isUser ) {
 			// Can view if page is `published` or `closed` and access is `protected`, `public` or `open`
 			if( (isPublished || isClosed) && (isProtected || isPublic || isOpen) ) return previous;
-			else result = Forbidden(null);
+			else result = Result.of(Forbidden, null);
 		}
 		
 		// Moderator, but nor owner of the page
 		if( (! isOwner) && isModerator ) {
 			// Can view any, except deleted and private
-			if (isPrivate) result = Forbidden(null);
-			else if (isDeleted) result = NotFound(null);
+			if (isPrivate) result = Result.of(Forbidden, null);
+			else if (isDeleted) result = Result.of(Forbidden, null);
 			else return previous;
 		}
 		
 		// Owner of the page
 		if ( isOwner ) {
 			// Can view any, except deleted
-			if (isDeleted) result = NotFound(null);
+			if (isDeleted) result = Result.of(NotFound, null);
 			else return previous;
 		}
 		
@@ -106,7 +108,7 @@ public class ViewAccessManager extends Results implements PageService {
 	@Override
 	public Result<Page> put(Selector selector, Page page) {
 		// Default return bad request: view service doesn't allow put!
-		return BadRequest(null);		
+		return Result.of(BadRequest, null);
 	}
 
 }

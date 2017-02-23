@@ -1,34 +1,60 @@
 package com.stys.platform.pages.modules;
 
-import com.stys.platform.pages.api.ContentService;
-import com.stys.platform.pages.api.PageService;
-import com.stys.platform.pages.api.TemplateProvider;
+import com.stys.platform.pages.api.Page;
+import com.stys.platform.pages.api.Result;
+import com.stys.platform.pages.api.Selector;
+import com.stys.platform.pages.api.Template;
+import com.stys.platform.pages.controllers.Actions;
 import com.stys.platform.pages.impl.DefaultTemplateProvider;
-import com.stys.platform.pages.impl.ViewAccessManager;
-import com.stys.platform.pages.impl.ViewService;
-import com.stys.platform.pages.impl.ViewTemplateService;
-import com.stys.platform.pages.markdown.DefaultMarkdownPluginsProvider;
-import com.stys.platform.pages.markdown.MarkdownPluginsProvider;
-import com.stys.platform.pages.markdown.MarkdownProcessor;
+import com.stys.platform.pages.impl.DefaultViewAccessManager;
+import com.stys.platform.pages.impl.DefaultViewService;
 import com.stys.platform.pages.repository.DefaultPagesRepository;
+import com.stys.platform.pages.utils.InjectServiceAdapter;
 import play.api.Configuration;
 import play.api.Environment;
 import play.api.inject.Binding;
 import play.api.inject.Module;
+import play.twirl.api.Content;
 import scala.collection.Seq;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 public class DefaultViewModule extends Module {
+
+    @Singleton
+    private static class _DefaultViewService
+            extends InjectServiceAdapter<Result<Content>, Selector, Page, DefaultViewService>
+            implements Actions.ViewService {}
+
+    @Singleton
+    private static class _DefaultViewAccessManager
+            extends InjectServiceAdapter<Result<Page>, Selector, Page, DefaultViewAccessManager>
+            implements DefaultViewService.Delegate {}
+
+    @Singleton
+    private static class _DefaultPagesRepository
+            extends InjectServiceAdapter<Result<Page>, Selector, Page, DefaultPagesRepository>
+            implements DefaultViewAccessManager.Delegate {}
+
+    @Singleton
+    private static class _DefaultTemplateProvider implements DefaultViewService.ViewTemplateProvider {
+        @Inject
+        private DefaultTemplateProvider instance;
+
+        @Override
+        public Template get(String name) {
+            return instance.get(name);
+        }
+    }
 
     @Override
 	public Seq<Binding<?>> bindings(Environment environment, Configuration configuration) {
 		return seq(
-            bind(ContentService.class).qualifiedWith("view").to(ViewService.class),
-            bind(ContentService.class).qualifiedWith("view:delegate").to(ViewTemplateService.class),
-            bind(TemplateProvider.class).qualifiedWith("view:template-provider").to(DefaultTemplateProvider.class),
-            bind(PageService.class).qualifiedWith("view:template:delegate").to(ViewAccessManager.class),
-            bind(PageService.class).qualifiedWith("view:access:delegate").to(MarkdownProcessor.class),
-            bind(PageService.class).qualifiedWith("processor:delegate").to(DefaultPagesRepository.class),
-            bind(MarkdownPluginsProvider.class).to(DefaultMarkdownPluginsProvider.class)
+            bind(Actions.ViewService.class).to(_DefaultViewService.class),
+            bind(DefaultViewService.Delegate.class).to(_DefaultViewAccessManager.class),
+            bind(DefaultViewService.ViewTemplateProvider.class).to(_DefaultTemplateProvider.class),
+            bind(DefaultViewAccessManager.Delegate.class).to(_DefaultPagesRepository.class)
 		);
 	}
 

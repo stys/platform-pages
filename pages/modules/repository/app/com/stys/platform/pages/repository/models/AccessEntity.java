@@ -21,10 +21,7 @@ public class AccessEntity extends Model {
 
     @ManyToOne
     public PageEntity page;
-    
-    @CreatedTimestamp
-    public Timestamp createDateTime;
-    
+
     public static final Finder<Long, AccessEntity> find = new Finder<>(AccessEntity.class);
     
 }

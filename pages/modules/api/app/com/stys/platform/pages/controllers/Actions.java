@@ -1,33 +1,32 @@
 package com.stys.platform.pages.controllers;
 
-import com.stys.platform.pages.api.ContentService;
 import com.stys.platform.pages.api.Page;
 import com.stys.platform.pages.api.Selector;
+import com.stys.platform.pages.api.Service;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.ValidationError;
-import play.mvc.Call;
 import play.mvc.Result;
 import play.mvc.Results;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public class Actions extends play.mvc.Controller {
 
-    private ContentService viewService;
+    public interface ViewService extends Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> {}
 
-    private ContentService editService;
+    public interface EditService extends Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> {}
+
+    private Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> viewService;
+
+    private Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> editService;
 
     @Inject
-    public Actions(
-        @Named("view") ContentService viewService,
-        @Named("edit") ContentService editService
-    ) {
+    public Actions(ViewService viewService, EditService editService) {
         this.viewService = viewService;
         this.editService = editService;
     }
