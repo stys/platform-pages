@@ -15,20 +15,27 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
+import static com.stys.platform.pages.api.Result.Status.Ok;
+
 public class Actions extends play.mvc.Controller {
 
     public interface ViewService extends Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> {}
 
-    public interface EditService extends Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> {}
-
     private Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> viewService;
+
+    public interface EditService extends Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> {}
 
     private Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> editService;
 
+    public interface PreviewService extends Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> {}
+
+    private Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> previewService;
+
     @Inject
-    public Actions(ViewService viewService, EditService editService) {
+    public Actions(ViewService viewService, EditService editService, PreviewService previewService) {
         this.viewService = viewService;
         this.editService = editService;
+        this.previewService = previewService;
     }
 
     /** Display a page by namespace and key */
@@ -59,14 +66,14 @@ public class Actions extends play.mvc.Controller {
 
         // Bind form data from request
     	Form<Page> filled = form.bindFromRequest();
-        
+
     	// Check errors in form
     	if( filled.hasErrors() ) {
         	for (Map.Entry<String, List<ValidationError>> e : filled.errors().entrySet()) {
         		Logger.error(e.getKey() + " " + e.getValue().get(0).message());
         	}
         }
-    	
+
     	// Get page data
     	final Page page = filled.get();
 
@@ -74,7 +81,7 @@ public class Actions extends play.mvc.Controller {
         com.stys.platform.pages.api.Result<Content> result = editService.put(new Selector(page.namespace, page.key), page);
 
         // If status Ok -> redirect to view 
-    	if (result.getStatus().equals(com.stys.platform.pages.api.Result.Status.Ok)) {
+    	if (result.getStatus().equals(Ok)) {
     		final String namespace = page.namespace;
             final String key = page.key;
             return redirect(routes.Actions.view(namespace, key));
@@ -82,6 +89,28 @@ public class Actions extends play.mvc.Controller {
     	} else {
     		return toPlayMvcResult(result);
     	}
+    }
+
+    public Result preview() {
+
+        // Bind form data from request
+        Form<Page> filled = form.bindFromRequest();
+
+        // Check errors in form
+        if( filled.hasErrors() ) {
+            for (Map.Entry<String, List<ValidationError>> e : filled.errors().entrySet()) {
+                Logger.error(e.getKey() + " " + e.getValue().get(0).message());
+            }
+        }
+
+        // Get page data
+        final Page page = filled.get();
+
+        // Store as new revision
+        com.stys.platform.pages.api.Result<Content> result = previewService.put(new Selector(page.namespace, page.key), page);
+
+        // Convert to MVC result
+        return toPlayMvcResult(result);
     }
 
     private static Result toPlayMvcResult(com.stys.platform.pages.api.Result<Content> result) {

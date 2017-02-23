@@ -1,3 +1,4 @@
 GET     /:namespace/*key      com.stys.platform.pages.controllers.Actions.view(namespace, key)
 GET     /edit                 com.stys.platform.pages.controllers.Actions.edit(namespace ?= null, key ?= null)
 POST	/edit		          com.stys.platform.pages.controllers.Actions.update()
+POST    /preview              com.stys.platform.pages.controllers.Actions.preview()
