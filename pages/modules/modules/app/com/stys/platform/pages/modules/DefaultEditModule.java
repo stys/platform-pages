@@ -19,6 +19,7 @@ import scala.collection.Seq;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+
 public class DefaultEditModule extends Module {
 
     @Singleton

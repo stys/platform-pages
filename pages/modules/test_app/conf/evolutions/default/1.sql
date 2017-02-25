@@ -52,7 +52,7 @@ create table pages_state (
   id                        bigint not null,
   state_                    varchar(255),
   page_id                   bigint,
-  update_date_time          timestamp not null,
+  create_date_time          timestamp not null,
   constraint pk_pages_state primary key (id))
 ;
 

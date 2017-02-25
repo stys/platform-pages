@@ -108,7 +108,7 @@ public class DefaultPagesRepository implements Service<Result<Page>, Selector, P
 		page_.description = meta.description;
 		page_.keywords = meta.keywords;
 		page_.category = meta.category;
-		page_.published = state.state.equals(Published.name()) ? new DateTime(state.updateDateTime) : null;
+		page_.published = state.state.equals(Published.name()) ? new DateTime(state.createDateTime) : null;
         page_.edited = new DateTime(revision.createDateTime);
         
         page_.revision = revision.id;

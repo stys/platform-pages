@@ -2,10 +2,9 @@ name := "platform-pages"
 
 lazy val commonSettings = Seq(
   organization := "com.stys",
-  version := "1.2.1",
+  version := "1.2.1-SNAPSHOT",
   scalaVersion := "2.11.7",
-  routesGenerator := InjectedRoutesGenerator,
-  publishTo := Some(Resolver.file("file", new File("/Users/stys/Work/maven-releases")))
+  routesGenerator := InjectedRoutesGenerator
 )
 
 lazy val api = (project in file("modules/api"))
@@ -39,6 +38,6 @@ lazy val test_app = (project in file("modules/test_app"))
 lazy val root: Project = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
     .settings(
       commonSettings,
-      aggregateReverseRoutes := Seq(api, test_app)
+      aggregateReverseRoutes := Seq(api)
     )
     .aggregate(api, repository, markdown, modules, test_app)

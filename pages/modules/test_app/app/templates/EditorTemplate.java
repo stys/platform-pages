@@ -5,23 +5,25 @@ import play.Configuration;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.stys.platform.pages.api.TemplateKeys.ENABLED_TEMPLATES_KEY;
-
+@Singleton
 public class EditorTemplate implements Template {
 
     private static final String CATEGORIES_CONFIGURATION_KEY = "pages.categories";
 
+    private static final String TEMPLATES_CONFIGURATION_KEY = "pages.templates";
+
     private List<String> templates;
+
     private List<String> categories;
 
+    @Inject
     public EditorTemplate(Configuration configuration) {
-        templates = configuration.getConfig(ENABLED_TEMPLATES_KEY).asMap().keySet().stream()
-                .map(t -> ENABLED_TEMPLATES_KEY + '.' + t).collect(Collectors.toList());
+        templates = configuration.getStringList(TEMPLATES_CONFIGURATION_KEY);
         categories = configuration.getStringList(CATEGORIES_CONFIGURATION_KEY);
     }
 

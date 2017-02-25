@@ -1,0 +1,31 @@
+@(page: com.stys.platform.pages.api.Page)
+
+@main(page.title) {
+    <div class="row">
+        <div class="thumbnail"><img src="@page.thumb" alt="@page.title"></div>
+        <span class="label label-default">@page.namespace/@page.key:@page.revision</span>
+        <span class="label label-default">@page.state</span>
+        <p>Summary: @page.summary </p>
+    </div>
+
+    <div class="row">
+
+        <p>Thumb: @page.thumb </p>
+
+        <p>Description: @page.description </p>
+
+        <p>Keywords: @page.keywords </p>
+
+        <p>Category: @page.category </p>
+
+        <p>Published: @page.published</p>
+
+        <p>Edited: @page.edited</p>
+
+        <article id="content">
+        @Html(page.content)
+        </article>
+
+        <a class="btn btn-default" href="@com.stys.platform.pages.controllers.routes.Actions.edit(page.namespace, page.key)">Редактировать</a>
+    </div>
+}

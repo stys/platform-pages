@@ -23,8 +23,8 @@ public class StateEntity extends Model {
     @ManyToOne
     public PageEntity page;
 
-    @UpdatedTimestamp
-    public Timestamp updateDateTime;
+    @CreatedTimestamp
+    public Timestamp createDateTime;
     
     public static final Model.Finder<Long, StateEntity> find = new Model.Finder<>(StateEntity.class);
 

@@ -1,69 +1,48 @@
 package com.stys.platform.pages.impl;
 
 import com.stys.platform.pages.api.Template;
+import com.stys.platform.pages.api.TemplateKeys;
 import com.stys.platform.pages.api.TemplateProvider;
-import play.Configuration;
-import play.Environment;
+import play.api.inject.BindingKey;
+import play.inject.Injector;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.stys.platform.pages.api.TemplateKeys.*;
 
 @Singleton
 public class DefaultTemplateProvider implements TemplateProvider {
 
-    private Map<String, Template> enabledTemplates;
+    @Inject
+    @Named(TemplateKeys.DEFAULT_TEMPLATE_KEY)
     private Template defaultTemplate;
+
+    @Inject
+    @Named(TemplateKeys.EDITOR_TEMPLATE_KEY)
     private Template editorTemplate;
+
+    @Inject
+    @Named(TemplateKeys.ERROR_TEMPLATE_KEY)
     private Template errorTemplate;
 
     @Inject
-    @SuppressWarnings("unchecked")
-    public DefaultTemplateProvider(Configuration configuration, Environment environment) {
-
-        Map<String, Object> templatesConfiguration =
-                configuration.getConfig(ENABLED_TEMPLATES_KEY).asMap();
-
-        try {
-            ClassLoader classLoader = environment.classLoader();
-
-            Class errorTemplateClass = classLoader.loadClass(configuration.getString(ERROR_TEMPLATE_KEY));
-            errorTemplate = (Template) errorTemplateClass.getConstructor(Configuration.class).newInstance(configuration);
-
-            Class defaultTemplateClass = classLoader.loadClass(configuration.getString(DEFAULT_TEMPLATE_KEY));
-            defaultTemplate = (Template) defaultTemplateClass.getConstructor(Configuration.class).newInstance(configuration);
-
-            Class editorTemplateClass = classLoader.loadClass(configuration.getString(EDITOR_TEMPLATE_KEY));
-            editorTemplate = (Template) editorTemplateClass.getConstructor(Configuration.class).newInstance(configuration);
-
-            enabledTemplates = new HashMap<>();
-            for (Map.Entry<String, Object> t: templatesConfiguration.entrySet()) {
-                Class templateClass = classLoader.loadClass((String) t.getValue());
-                Template template = (Template) templateClass.getConstructor(Configuration.class).newInstance(configuration);
-                enabledTemplates.put(ENABLED_TEMPLATES_KEY + '.' + t.getKey(), template);
-            }
-
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
-    }
+    private Injector injector;
 
     @Override
     public Template get(String name) {
-        if (null == name) return this.defaultTemplate;
         switch (name) {
             case ERROR_TEMPLATE_KEY:
-                return this.errorTemplate;
+                return errorTemplate;
             case EDITOR_TEMPLATE_KEY:
-                return this.editorTemplate;
+                return editorTemplate;
             default:
-                Template template = this.enabledTemplates.get(name);
-                if (null != template) return template;
-                else return this.defaultTemplate;
+                Template template = injector.instanceOf(BindingKey.apply(Template.class).qualifiedWith(name));
+                if (null == template) {
+                    template = defaultTemplate;
+                }
+                return template;
         }
     }
 }

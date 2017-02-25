@@ -11,7 +11,7 @@ import play.mvc.Results;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
+
 import java.util.List;
 import java.util.Map;
 
