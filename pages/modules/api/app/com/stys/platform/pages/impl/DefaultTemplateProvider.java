@@ -38,11 +38,11 @@ public class DefaultTemplateProvider implements TemplateProvider {
             case EDITOR_TEMPLATE_KEY:
                 return editorTemplate;
             default:
-                Template template = injector.instanceOf(BindingKey.apply(Template.class).qualifiedWith(name));
-                if (null == template) {
-                    template = defaultTemplate;
+                try {
+                    return injector.instanceOf(BindingKey.apply(Template.class).qualifiedWith(name));
+                } catch (Exception ex) {
+                    return defaultTemplate;
                 }
-                return template;
         }
     }
 }
