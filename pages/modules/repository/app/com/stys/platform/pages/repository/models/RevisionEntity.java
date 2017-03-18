@@ -34,6 +34,7 @@ public class RevisionEntity extends Model {
 	
 	/** Global revision number */
 	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long id;
 
     @ManyToOne

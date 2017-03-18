@@ -13,6 +13,7 @@ public class PageEntity extends Model {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long id;
 
     public String namespace;

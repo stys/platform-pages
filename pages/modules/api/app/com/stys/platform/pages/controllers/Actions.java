@@ -11,12 +11,14 @@ import play.mvc.Results;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Map;
 
 import static com.stys.platform.pages.api.Result.Status.Ok;
 
+@Singleton
 public class Actions extends play.mvc.Controller {
 
     public interface ViewService extends Service<com.stys.platform.pages.api.Result<Content>, Selector, Page> {}

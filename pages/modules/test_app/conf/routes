@@ -1,4 +1,4 @@
 GET     /                               controllers.Application.index()
-->      /pages                          api.Routes
+->      /pages                          com.stys.platform.pages.api.Routes
 
 GET     /assets/*file                   controllers.Assets.at(path="/public", file)

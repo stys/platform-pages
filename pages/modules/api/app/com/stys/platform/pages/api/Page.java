@@ -6,15 +6,15 @@ import java.time.LocalDate;
 
 public class Page {
 
-    public String namespace;
+    public String namespace = "";
 
-    public String key;
+    public String key = "";
 
     public String owner;
 
-    public Access access;
+    public Access access = Access.Private;
 
-    public State state;
+    public State state = State.Draft;
 
     public String template;
 

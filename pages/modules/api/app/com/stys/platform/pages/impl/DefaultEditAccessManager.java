@@ -74,7 +74,7 @@ public class DefaultEditAccessManager implements Service<Result<Page>, Selector,
 		// No user present
 		if(! isUserPresent) {
 			// Anonymous users can not edit
-			return Result.of(Unauthorized, null);
+			return Result.of(Unauthorized, previous.getPayload());
 		}
 		
 		// Simple user, not owner of the page

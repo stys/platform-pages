@@ -11,7 +11,7 @@ public class ErrorTemplate implements Template {
 
     @Override
     public Content render(Page page) {
-        return null;
+        return views.html.error.render(page);
     }
 
 }

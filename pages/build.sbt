@@ -2,7 +2,7 @@ name := "platform-pages"
 
 lazy val commonSettings = Seq(
   organization := "com.stys",
-  version := "1.2.1",
+  version := "1.2.2",
   scalaVersion := "2.11.7",
   routesGenerator := InjectedRoutesGenerator
 )

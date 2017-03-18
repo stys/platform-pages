@@ -14,6 +14,7 @@ public class AccessEntity extends Model {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long id;
 
     @Column(name = "access_")
