@@ -1,3 +1,3 @@
 name := "platform-pages-markdown"
 
-libraryDependencies += "org.commonjava.googlecode.markdown4j" % "markdown4j" % "2.2-cj-1.0"
+libraryDependencies += "com.vladsch.flexmark" % "flexmark-all" % "0.40.16"

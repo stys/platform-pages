@@ -3,10 +3,7 @@ package com.stys.platform.pages.modules;
 import com.stys.platform.pages.api.*;
 import com.stys.platform.pages.controllers.Actions;
 import com.stys.platform.pages.impl.*;
-import com.stys.platform.pages.markdown.DefaultMarkdownPluginsProvider;
-import com.stys.platform.pages.markdown.MarkdownPluginsProvider;
-import com.stys.platform.pages.markdown.DefaultMarkdownProcessor;
-import com.stys.platform.pages.markdown.MarkdownProcessor;
+import com.stys.platform.pages.markdown.*;
 import com.stys.platform.pages.repository.DefaultPagesRepository;
 import com.stys.platform.pages.utils.InjectServiceAdapter;
 import play.api.Configuration;
@@ -47,7 +44,7 @@ public class DefaultEditModule extends Module {
 
         @Override
         public Result<Page> put(Selector selector, Page page) {
-            page.content = processor.process(page.source);
+            page.content = processor.render(page.source);
             return repository.put(selector, page);
         }
     }
@@ -70,8 +67,8 @@ public class DefaultEditModule extends Module {
             bind(DefaultEditService.EditTemplateProvider.class).to(_DefaultTemplateProvider.class),
             bind(DefaultEditService.Delegate.class).to(_DefaultEditAccessManager.class),
             bind(DefaultEditAccessManager.Delegate.class).to(_MarkdownProcessor.class),
-            bind(MarkdownProcessor.class).to(DefaultMarkdownProcessor.class),
-            bind(MarkdownPluginsProvider.class).to(DefaultMarkdownPluginsProvider.class)
+            bind(MarkdownProcessor.class).to(FlexmarkMarkdownProcessor.class)
+            //bind(MarkdownPluginsProvider.class).to(DefaultMarkdownPluginsProvider.class)
         );
 
     }

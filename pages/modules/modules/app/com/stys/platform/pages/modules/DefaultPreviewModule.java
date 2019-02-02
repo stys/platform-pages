@@ -7,7 +7,6 @@ import com.stys.platform.pages.api.Template;
 import com.stys.platform.pages.controllers.Actions;
 import com.stys.platform.pages.impl.DefaultPreviewService;
 import com.stys.platform.pages.impl.DefaultTemplateProvider;
-import com.stys.platform.pages.impl.DefaultViewService;
 import com.stys.platform.pages.markdown.MarkdownProcessor;
 import com.stys.platform.pages.utils.InjectServiceAdapter;
 import play.api.Configuration;
@@ -45,7 +44,6 @@ public class DefaultPreviewModule extends Module {
         @Inject
         private MarkdownProcessor processor;
 
-
         @Override
         public Result<Page> get(Selector selector) {
             throw new UnsupportedOperationException();
@@ -53,7 +51,7 @@ public class DefaultPreviewModule extends Module {
 
         @Override
         public Result<Page> put(Selector selector, Page page) {
-            page.content = processor.process(page.source);
+            page.content = processor.render(page.source);
             return Result.of(Ok, page);
         }
     }
